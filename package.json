@@ -1,0 +1,13 @@
+{
+  "name": "claimline",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Claimline - insurance claims adjudication on GenLayer",
+  "scripts": {
+    "dev": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build",
+    "preview": "npm --prefix frontend run preview",
+    "typecheck": "npm --prefix frontend run typecheck",
+    "deploy:contract": "genlayer deploy --contract contracts/Claimline.py"
+  }
+}

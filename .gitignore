@@ -1,0 +1,33 @@
+# secrets
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+.deployer-*
+secrets.json
+
+# node
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# python
+__pycache__/
+*.pyc
+
+# build output
+frontend/dist/
+frontend/.vite/
+
+# local notes
+submission.md
+what-changed.md
+
+# editors / os
+.DS_Store
+Thumbs.db
+*.log
+.idea/
+.vscode/*
+!.vscode/extensions.json
