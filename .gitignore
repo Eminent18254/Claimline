@@ -19,6 +19,7 @@ __pycache__/
 # build output
 frontend/dist/
 frontend/.vite/
+frontend/artifacts/ui/
 
 # local notes
 submission.md

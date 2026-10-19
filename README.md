@@ -105,6 +105,17 @@ Each decision stores:
 
 The app reads and writes the contract directly from the browser through `genlayer-js`. There is no backend and no database: the chain is the source of truth, and the UI shows every verdict, band and condition finding read from `get_state`.
 
+The white landing page, with green accents and natural-color photography, lives at `/`. Visitors can connect a wallet to enter,
+or choose **Open claims desk** to browse `/app` without one. Creating policies, filing claims, and other
+write operations require a connected wallet; policyholder and insurer permissions still apply.
+The landing page includes coverage examples, the review process, evidence verification, role guides,
+and FAQs with locally hosted photography.
+
+The complete user guide is available at `/docs`, linked from every page footer. It covers setup,
+permissions, policy fields, text evidence preparation, decisions, appeals, payout arithmetic, the
+contract interface, and troubleshooting. A shared Claimline wordmark and validation monogram appear
+throughout the app, with SVG, PNG, ICO, and Apple touch icon assets in `frontend/public/`.
+
 - Connect an injected wallet (MetaMask) on Studionet.
 - Write a policy as an insurer, or file a claim as the holder.
 - Hash a file in the browser to fill the digest field.
@@ -122,6 +133,26 @@ npm --prefix frontend run dev
 ```bash
 npm run build
 ```
+
+### Frontend verification
+
+The claims desk supports policy and claim search, claim status filters, a consistent light appearance,
+and keyboard-accessible detail dialogs. Opening a claim from a policy keeps that policy selected.
+If Studionet cannot be reached within 20 seconds, the interface offers a retry and retains any
+previously loaded records.
+
+With the Vite development server running, run the browser checks in a second terminal:
+
+```bash
+cd frontend
+npx playwright install chromium
+npm run test:ui
+```
+
+The checks inject isolated fixtures in the browser; they do not submit live transactions. They cover
+landing/app navigation, guest browsing, wallet gates, search, filters, file hashing, policy selection, decision refresh, keyboard focus, responsive
+layouts, and connection recovery. Screenshots are written to `frontend/artifacts/ui/` (gitignored).
+Set `CLAIMLINE_URL` for another local server URL or `CLAIMLINE_BROWSER` to use an existing Chromium executable.
 
 ## Deploy the contract
 

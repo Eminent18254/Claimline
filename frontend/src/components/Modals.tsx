@@ -10,6 +10,7 @@ import {
   type Policy,
 } from '@/lib/claimline';
 import { createPolicy, fileClaim, readError, stateAddress } from '@/lib/genlayer/client';
+import { Dialog } from './Dialog';
 
 function localInput(date: Date): string {
   const pad = (value: number) => String(value).padStart(2, '0');
@@ -18,28 +19,33 @@ function localInput(date: Date): string {
   )}:${pad(date.getMinutes())}`;
 }
 
-function Modal({ title, subtitle, onClose, children }: {
+function Modal({
+  title,
+  subtitle,
+  onClose,
+  children,
+  busy = false,
+}: {
   title: string;
   subtitle: string;
   onClose: () => void;
   children: React.ReactNode;
+  busy?: boolean;
 }) {
   return (
-    <div className="overlay" onClick={onClose}>
-      <div className="modal" onClick={(event) => event.stopPropagation()}>
-        <header className="drawer-head">
-          <div>
-            <span className="kicker">Claimline</span>
-            <h2>{title}</h2>
-            <p className="modal-sub">{subtitle}</p>
-          </div>
-          <button className="icon-btn" onClick={onClose} aria-label="Close">
-            <X size={18} />
-          </button>
-        </header>
-        {children}
-      </div>
-    </div>
+    <Dialog title={title} variant="modal" onClose={onClose} busy={busy}>
+      <header className="drawer-head">
+        <div>
+          <span className="kicker">Claimline</span>
+          <h2>{title}</h2>
+          <p className="modal-sub">{subtitle}</p>
+        </div>
+        <button className="icon-btn" onClick={onClose} aria-label="Close" disabled={busy}>
+          <X size={18} />
+        </button>
+      </header>
+      {children}
+    </Dialog>
   );
 }
 
@@ -75,6 +81,11 @@ export function NewPolicyModal({ onClose, onDone }: { onClose: () => void; onDon
     setError(null);
     try {
       if (!holder.trim()) throw new Error('Enter the holder address');
+      if (!stateAddress()) throw new Error('Connect your wallet to write a policy.');
+      if (holder.trim().toLowerCase() === stateAddress()?.toLowerCase())
+        throw new Error(
+          'The holder must be a different address from the insurer signing this policy.',
+        );
       if (conditions.some((item) => !item.trim())) throw new Error('Every condition needs text');
       await createPolicy({
         holder,
@@ -100,17 +111,20 @@ export function NewPolicyModal({ onClose, onDone }: { onClose: () => void; onDon
       title="Write a policy"
       subtitle="The insurer signs this. The wording and conditions are fixed before any claim exists."
       onClose={onClose}
+      busy={busy}
     >
       <div className="drawer-body">
         <div className="form-grid">
           <label className="field span-2">
             <span>Holder address</span>
-            <input value={holder} onChange={(event) => setHolder(event.target.value)} placeholder="0x…" />
-            {stateAddress() && (
-              <button className="inline-link" type="button" onClick={() => setHolder(stateAddress() ?? '')}>
-                Use my connected wallet ({shortAddress(stateAddress() ?? '')})
-              </button>
-            )}
+            <input
+              value={holder}
+              onChange={(event) => setHolder(event.target.value)}
+              placeholder="0x…"
+            />
+            <span className="field-hint">
+              Use a different address from the insurer wallet signing this policy.
+            </span>
           </label>
 
           <label className="field">
@@ -120,27 +134,47 @@ export function NewPolicyModal({ onClose, onDone }: { onClose: () => void; onDon
 
           <label className="field">
             <span>Coverage limit (GEN)</span>
-            <input value={limit} onChange={(event) => setLimit(event.target.value)} inputMode="decimal" />
+            <input
+              value={limit}
+              onChange={(event) => setLimit(event.target.value)}
+              inputMode="decimal"
+            />
           </label>
 
           <label className="field">
             <span>Deductible (GEN)</span>
-            <input value={deductible} onChange={(event) => setDeductible(event.target.value)} inputMode="decimal" />
+            <input
+              value={deductible}
+              onChange={(event) => setDeductible(event.target.value)}
+              inputMode="decimal"
+            />
           </label>
 
           <label className="field">
             <span>Fund the pool now (GEN)</span>
-            <input value={pool} onChange={(event) => setPool(event.target.value)} inputMode="decimal" />
+            <input
+              value={pool}
+              onChange={(event) => setPool(event.target.value)}
+              inputMode="decimal"
+            />
           </label>
 
           <label className="field">
             <span>Covers from</span>
-            <input type="datetime-local" value={startsAt} onChange={(event) => setStartsAt(event.target.value)} />
+            <input
+              type="datetime-local"
+              value={startsAt}
+              onChange={(event) => setStartsAt(event.target.value)}
+            />
           </label>
 
           <label className="field">
             <span>Covers until</span>
-            <input type="datetime-local" value={endsAt} onChange={(event) => setEndsAt(event.target.value)} />
+            <input
+              type="datetime-local"
+              value={endsAt}
+              onChange={(event) => setEndsAt(event.target.value)}
+            />
           </label>
         </div>
 
@@ -161,7 +195,10 @@ export function NewPolicyModal({ onClose, onDone }: { onClose: () => void; onDon
               <Plus size={13} /> Add condition
             </button>
           </div>
-          <p className="hint">Each condition is checked individually. The committee must report a pass or fail for every one.</p>
+          <p className="hint">
+            Each condition is checked individually. The committee must report a pass or fail for
+            every one.
+          </p>
           <ul className="condition-inputs">
             {conditions.map((condition, index) => (
               <li key={index}>
@@ -205,16 +242,24 @@ export function NewPolicyModal({ onClose, onDone }: { onClose: () => void; onDon
 
 export function FileClaimModal({
   policies,
+  initialPolicyId,
+  wallet,
   onClose,
   onDone,
 }: {
   policies: Policy[];
+  initialPolicyId?: string;
+  wallet: string | null;
   onClose: () => void;
   onDone: () => void;
 }) {
-  const wallet = stateAddress();
   const mine = policies.filter((policy) => policy.status === 'ACTIVE');
-  const [policyId, setPolicyId] = useState(mine[0]?.id ?? '');
+  const [policyId, setPolicyId] = useState(
+    initialPolicyId ??
+      mine.find((policy) => policy.holder.toLowerCase() === wallet?.toLowerCase())?.id ??
+      mine[0]?.id ??
+      '',
+  );
   const [incidentAt, setIncidentAt] = useState(localInput(new Date()));
   const [claimed, setClaimed] = useState('250');
   const [uri, setUri] = useState('');
@@ -230,6 +275,8 @@ export function FileClaimModal({
     setHashing(true);
     try {
       setDigest(await sha256Digest(await file.arrayBuffer()));
+    } catch {
+      setError('Could not read that file. Select it again to calculate its fingerprint.');
     } finally {
       setHashing(false);
     }
@@ -240,7 +287,9 @@ export function FileClaimModal({
     setError(null);
     try {
       if (!policyId) throw new Error('Choose a policy');
+      if (!stateAddress()) throw new Error('Connect your wallet to file a claim.');
       if (!uri.trim()) throw new Error('Enter the document URL');
+      if (!/^https:\/\//i.test(uri.trim())) throw new Error('The document URL must use HTTPS');
       if (!/^sha256:[0-9a-f]{64}$/i.test(digest.trim())) {
         throw new Error('Digest must be sha256: followed by 64 hex characters');
       }
@@ -262,8 +311,9 @@ export function FileClaimModal({
   return (
     <Modal
       title="File a claim"
-      subtitle="You commit a document and its SHA-256. The committee reads that document itself - there is no summary to reword."
+      subtitle="Choose a policy and submit the original evidence. The committee reviews that document against your coverage."
       onClose={onClose}
+      busy={busy}
     >
       <div className="drawer-body">
         {mine.length === 0 ? (
@@ -285,12 +335,29 @@ export function FileClaimModal({
 
             {selected && (
               <div className="policy-summary">
-                <div><span>Covered</span><strong>{formatDate(selected.startsAt)} — {formatDate(selected.endsAt)}</strong></div>
-                <div><span>Deductible</span><strong>{formatGen(selected.deductibleWei)} GEN</strong></div>
-                <div><span>Pool</span><strong>{formatGen(selected.poolWei)} GEN</strong></div>
-                <div><span>Holder</span><strong>{shortAddress(selected.holder)}</strong></div>
+                <div>
+                  <span>Covered</span>
+                  <strong>
+                    {formatDate(selected.startsAt)} to {formatDate(selected.endsAt)}
+                  </strong>
+                </div>
+                <div>
+                  <span>Deductible</span>
+                  <strong>{formatGen(selected.deductibleWei)} GEN</strong>
+                </div>
+                <div>
+                  <span>Pool</span>
+                  <strong>{formatGen(selected.poolWei)} GEN</strong>
+                </div>
+                <div>
+                  <span>Holder</span>
+                  <strong>{shortAddress(selected.holder)}</strong>
+                </div>
                 {wallet && selected.holder.toLowerCase() !== wallet.toLowerCase() && (
-                  <p className="field-error">Your wallet is not the holder on this policy. The contract will refuse the filing.</p>
+                  <p className="field-error">
+                    Your wallet is not the holder on this policy. The contract will refuse the
+                    filing.
+                  </p>
                 )}
               </div>
             )}
@@ -298,11 +365,19 @@ export function FileClaimModal({
             <div className="form-grid">
               <label className="field">
                 <span>Incident date</span>
-                <input type="datetime-local" value={incidentAt} onChange={(event) => setIncidentAt(event.target.value)} />
+                <input
+                  type="datetime-local"
+                  value={incidentAt}
+                  onChange={(event) => setIncidentAt(event.target.value)}
+                />
               </label>
               <label className="field">
                 <span>Amount claimed (GEN)</span>
-                <input value={claimed} onChange={(event) => setClaimed(event.target.value)} inputMode="decimal" />
+                <input
+                  value={claimed}
+                  onChange={(event) => setClaimed(event.target.value)}
+                  inputMode="decimal"
+                />
               </label>
             </div>
 
@@ -313,22 +388,31 @@ export function FileClaimModal({
                 onChange={(event) => setUri(event.target.value)}
                 placeholder="https://example.com/claim-pack.txt"
               />
-              <span className="field-hint">Must be public, HTTPS, and serve the file itself (max 64 KiB).</span>
+              <span className="field-hint">
+                Must be public, HTTPS, and serve the file itself (max 64 KiB).
+              </span>
             </label>
 
             <label className="field">
               <span>SHA-256 digest</span>
-              <input value={digest} onChange={(event) => setDigest(event.target.value)} placeholder="sha256:…" />
+              <input
+                value={digest}
+                onChange={(event) => setDigest(event.target.value)}
+                placeholder="sha256:…"
+              />
             </label>
 
             <label className="file-pick">
-              <input type="file" onChange={(event) => void pickFile(event.target.files?.[0] ?? null)} />
+              <input
+                type="file"
+                onChange={(event) => void pickFile(event.target.files?.[0] ?? null)}
+              />
               <span>{hashing ? 'Hashing…' : 'Hash a file to fill the digest'}</span>
             </label>
 
             <p className="hint">
-              The digest is the commitment. If the file at that URL ever changes, the committee refuses it
-              instead of judging it.
+              The digest is the commitment. If the file at that URL ever changes, the committee
+              refuses it instead of judging it.
             </p>
           </>
         )}
@@ -341,7 +425,16 @@ export function FileClaimModal({
       </div>
 
       <footer className="drawer-foot">
-        <button className="btn primary" disabled={busy || mine.length === 0} onClick={() => void submit()}>
+        <button
+          className="btn primary"
+          disabled={
+            busy ||
+            hashing ||
+            !selected ||
+            Boolean(wallet && selected.holder.toLowerCase() !== wallet.toLowerCase())
+          }
+          onClick={() => void submit()}
+        >
           {busy ? <Loader2 className="spin" size={15} /> : <FileText size={15} />}
           {busy ? 'Committing claim…' : 'File claim on chain'}
         </button>

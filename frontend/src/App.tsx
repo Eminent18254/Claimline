@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   AlertCircle,
   ArrowUpRight,
@@ -6,20 +6,11 @@ import {
   Loader2,
   Plus,
   RefreshCw,
+  Search,
   ShieldCheck,
   Wallet,
+  X,
 } from 'lucide-react';
-import {
-  canAdjudicate,
-  formatDate,
-  formatGen,
-  shortAddress,
-  statusLabel,
-  statusTone,
-  type Claim,
-  type ClaimlineState,
-  type Policy,
-} from '@/lib/claimline';
 import {
   adjudicate,
   connect,
@@ -27,75 +18,177 @@ import {
   fetchState,
   readError,
   replaceEvidence,
-  restore,
   settle,
-  subscribe,
-  type WalletState,
 } from '@/lib/genlayer/client';
-import { contractLink, GENLAYER } from '@/config/genlayer';
+import { canAdjudicate, formatGen, shortAddress, type ClaimlineState } from '@/lib/claimline';
+import { contractLink } from '@/config/genlayer';
 import { ClaimDrawer, PolicyDrawer } from '@/components/Drawers';
 import { FileClaimModal, NewPolicyModal } from '@/components/Modals';
+import { ClaimLedger, Empty, PolicyCard, Stat } from '@/components/Ledger';
+import { Landing } from '@/components/Landing';
+import { ConnectWalletModal } from '@/components/ConnectWalletModal';
+import { useSession } from '@/lib/session';
+import { Brand } from '@/components/Brand';
+import { Footer } from '@/components/Footer';
+import { Documentation } from '@/components/Documentation';
 
 type Tab = 'policies' | 'claims';
-type Toast = { kind: 'ok' | 'err'; text: string } | null;
+type Filter = 'ALL' | 'OPEN' | 'APPROVED' | 'PARTIALLY_APPROVED' | 'DECLINED' | 'SETTLED';
+const FILTERS: { key: Filter; label: string }[] = [
+  { key: 'ALL', label: 'All claims' },
+  { key: 'OPEN', label: 'Open' },
+  { key: 'APPROVED', label: 'Approved' },
+  { key: 'PARTIALLY_APPROVED', label: 'Partial' },
+  { key: 'DECLINED', label: 'Declined' },
+  { key: 'SETTLED', label: 'Settled' },
+];
 
 export default function App() {
+  const [path, setPath] = useState(window.location.pathname);
+  useEffect(() => {
+    const updatePath = () => setPath(window.location.pathname);
+    window.addEventListener('popstate', updatePath);
+    return () => window.removeEventListener('popstate', updatePath);
+  }, []);
+  const go = (next: string) => {
+    window.history.pushState(null, '', next);
+    setPath(next);
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  };
+  useEffect(() => {
+    document.title = path.startsWith('/app')
+      ? 'Claims desk | Claimline'
+      : path.startsWith('/docs')
+        ? 'Documentation | Claimline'
+        : 'Claimline - claims decided on evidence';
+  }, [path]);
+  return path === '/app' || path === '/app/' ? (
+    <Workspace onHome={() => go('/')} />
+  ) : path === '/docs' || path === '/docs/' ? (
+    <Documentation onHome={() => go('/')} onEnter={() => go('/app')} />
+  ) : (
+    <Landing onEnter={() => go('/app')} />
+  );
+}
+
+function Workspace({ onHome }: { onHome: () => void }) {
+  const { wallet } = useSession();
   const [state, setState] = useState<ClaimlineState | null>(null);
   const [loading, setLoading] = useState(true);
+  const inFlight = useRef(false);
   const [error, setError] = useState<string | null>(null);
   const [tab, setTab] = useState<Tab>('policies');
-  const [wallet, setWallet] = useState<WalletState>({
-    address: null,
-    isConnecting: false,
-    isWrongChain: false,
-  });
-  const [selectedPolicy, setSelectedPolicy] = useState<Policy | null>(null);
-  const [selectedClaim, setSelectedClaim] = useState<Claim | null>(null);
+  const [query, setQuery] = useState('');
+  const [filter, setFilter] = useState<Filter>('ALL');
+  const [updatedAt, setUpdatedAt] = useState<Date | null>(null);
+  const [selectedPolicyId, setSelectedPolicyId] = useState<string | null>(null);
+  const [selectedClaimId, setSelectedClaimId] = useState<string | null>(null);
+  const [filingPolicyId, setFilingPolicyId] = useState<string | undefined>();
   const [modal, setModal] = useState<'policy' | 'claim' | null>(null);
+  const [connectionIntent, setConnectionIntent] = useState<'policy' | 'claim' | 'browse' | null>(
+    null,
+  );
   const [busy, setBusy] = useState<string | null>(null);
-  const [toast, setToast] = useState<Toast>(null);
+  const [toast, setToast] = useState<{ kind: 'ok' | 'err'; text: string } | null>(null);
 
-  useEffect(() => subscribe(setWallet), []);
   useEffect(() => {
-    void restore();
-  }, []);
-
+    if (!wallet.address && modal) {
+      setConnectionIntent(modal);
+      setModal(null);
+    }
+  }, [wallet.address, modal]);
   useEffect(() => {
     if (!toast) return;
-    const timer = window.setTimeout(() => setToast(null), 6000);
+    const timer = window.setTimeout(() => setToast(null), 8000);
     return () => window.clearTimeout(timer);
   }, [toast]);
 
   const load = useCallback(async () => {
+    if (inFlight.current) return;
+    inFlight.current = true;
+    setLoading(true);
     setError(null);
+    let timeout: ReturnType<typeof setTimeout> | undefined;
     try {
-      setState(await fetchState());
+      const fresh = await Promise.race([
+        fetchState(),
+        new Promise<never>((_, reject) => {
+          timeout = setTimeout(
+            () =>
+              reject(new Error('Studionet did not respond within 20 seconds. Please try again.')),
+            20_000,
+          );
+        }),
+      ]);
+      setState(fresh);
+      setUpdatedAt(new Date());
     } catch (cause) {
       setError(readError(cause));
     } finally {
+      clearTimeout(timeout);
+      inFlight.current = false;
       setLoading(false);
     }
   }, []);
-
   useEffect(() => {
     void load();
   }, [load]);
 
   const policies = state?.policies ?? [];
   const claims = state?.claims ?? [];
+  const selectedPolicy = policies.find((policy) => policy.id === selectedPolicyId);
+  const selectedClaim = claims.find((claim) => claim.id === selectedClaimId);
+  const selectedClaimPolicy = policies.find((policy) => policy.id === selectedClaim?.policyId);
+  const openCount = claims.filter(
+    (claim) => claim.status === 'FILED' || claim.status === 'MORE_EVIDENCE_REQUIRED',
+  ).length;
+  const paid = policies.reduce((sum, policy) => sum + BigInt(policy.paidWei || '0'), 0n);
+  const needle = query.trim().toLowerCase();
+  const filteredClaims = claims.filter(
+    (claim) =>
+      (filter === 'ALL' ||
+        (filter === 'OPEN'
+          ? claim.status === 'FILED' || claim.status === 'MORE_EVIDENCE_REQUIRED'
+          : claim.status === filter)) &&
+      `${claim.id} ${claim.policyId} ${claim.status} ${claim.claimant}`
+        .toLowerCase()
+        .includes(needle),
+  );
+  const filteredPolicies = policies.filter((policy) =>
+    `${policy.id} ${policy.coverage} ${policy.holder} ${policy.insurer}`
+      .toLowerCase()
+      .includes(needle),
+  );
 
-  const stats = useMemo(() => {
-    const open = claims.filter(
-      (claim) => claim.status === 'FILED' || claim.status === 'MORE_EVIDENCE_REQUIRED',
-    ).length;
-    const approved = claims.filter(
-      (claim) => claim.status === 'APPROVED' || claim.status === 'PARTIALLY_APPROVED',
-    ).length;
-    const paid = policies.reduce((sum, policy) => sum + BigInt(policy.paidWei || '0'), 0n);
-    return { open, approved, paid: paid.toString() };
-  }, [claims, policies]);
-
+  function switchTab(next: Tab) {
+    setTab(next);
+    setQuery('');
+    setFilter('ALL');
+  }
+  function navigate(next: Tab) {
+    switchTab(next);
+    document.getElementById('workspace')?.scrollIntoView({
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        ? 'instant'
+        : 'smooth',
+      block: 'start',
+    });
+  }
+  function openClaim(policyId?: string) {
+    setFilingPolicyId(policyId);
+    if (!wallet.address) setConnectionIntent('claim');
+    else setModal('claim');
+  }
+  function openPolicy() {
+    if (!wallet.address) setConnectionIntent('policy');
+    else setModal('policy');
+  }
   async function act(label: string, work: () => Promise<void>) {
+    if (busy) return;
+    if (!wallet.address) {
+      setConnectionIntent('browse');
+      return;
+    }
     setBusy(label);
     try {
       await work();
@@ -108,359 +201,417 @@ export default function App() {
     }
   }
 
-  function refreshSelectedClaim() {
-    if (!selectedClaim) return;
-    const fresh = claims.find((claim) => claim.id === selectedClaim.id);
-    if (fresh) setSelectedClaim(fresh);
-  }
-
   return (
-    <div className="shell" id="top">
+    <div className="shell workspace-shell" id="top">
+      <a className="skip-link" href="#workspace">
+        Skip to the claims desk
+      </a>
       <header className="site-header">
-        <a className="brand" href="#top">
-          <span className="brand-mark">
-            <ShieldCheck size={18} strokeWidth={2.1} />
-          </span>
-          <span className="brand-word">Claimline</span>
-        </a>
-
-        <nav className="site-nav">
-          <button className={tab === 'policies' ? 'nav-link is-active' : 'nav-link'} onClick={() => setTab('policies')}>
+        <Brand onHome={onHome} />
+        <nav className="site-nav" aria-label="Main navigation">
+          <button
+            className={`nav-link ${tab === 'policies' ? 'is-active' : ''}`}
+            onClick={() => navigate('policies')}
+            aria-pressed={tab === 'policies'}
+          >
             Policies
           </button>
-          <button className={tab === 'claims' ? 'nav-link is-active' : 'nav-link'} onClick={() => setTab('claims')}>
+          <button
+            className={`nav-link ${tab === 'claims' ? 'is-active' : ''}`}
+            onClick={() => navigate('claims')}
+            aria-pressed={tab === 'claims'}
+          >
             Claims
           </button>
           <a className="nav-link" href={contractLink()} target="_blank" rel="noreferrer">
             Contract <ArrowUpRight size={13} />
           </a>
         </nav>
-
         <div className="header-actions">
           <span className="net-pill">
-            <span className="dot" /> {GENLAYER.chainName} · {GENLAYER.chainId}
+            Studionet <span>Testnet</span>
           </span>
           {wallet.address ? (
-            <button className="btn ghost" onClick={() => void disconnect()} title="Disconnect">
+            <button
+              className="btn ghost wallet-button"
+              onClick={() => void disconnect()}
+              title="Disconnect wallet"
+            >
+              <Wallet size={15} />
               {shortAddress(wallet.address)}
             </button>
           ) : (
-            <button className="btn primary" onClick={() => void connect().catch((e) => setToast({ kind: 'err', text: readError(e) }))}>
-              <Wallet size={15} /> {wallet.isConnecting ? 'Connecting' : 'Connect wallet'}
+            <button
+              className="btn primary wallet-button"
+              disabled={wallet.isConnecting}
+              onClick={() =>
+                void connect().catch((cause) => setToast({ kind: 'err', text: readError(cause) }))
+              }
+            >
+              <Wallet size={15} />
+              {wallet.isConnecting ? 'Connecting…' : 'Connect wallet'}
             </button>
           )}
         </div>
       </header>
 
       <main>
-        <section className="hero">
-          <div className="hero-copy">
-            <p className="eyebrow">Independent claims adjudication</p>
-            <h1>
-              Claims decided on evidence.
-              <span> Not on the insurer&apos;s word.</span>
-            </h1>
-            <p className="lede">
-              The policy is written to chain before the claim exists. The claim document is fetched and
-              hash-checked by the committee itself. Every condition comes back with a pass or fail, and
-              the payout is arithmetic on chain - not a number the model chose.
-            </p>
-            <div className="hero-actions">
-              <button className="btn primary" onClick={() => setModal('claim')}>
-                <FileText size={15} /> File a claim
-              </button>
-              <button className="btn ghost" onClick={() => setModal('policy')}>
-                <Plus size={15} /> Write a policy
-              </button>
-            </div>
+        <div className="workspace-intro">
+          <div>
+            <p className="kicker">Claimline / Claims desk</p>
+            <h1>The public claims ledger</h1>
+            <p>Read the policies. Review the evidence. Follow every decision.</p>
           </div>
+          <span className={`access-label ${wallet.address ? 'connected' : ''}`}>
+            <Wallet size={14} />
+            {wallet.address ? 'Wallet connected' : 'Browsing without a wallet'}
+          </span>
+        </div>
+        {!wallet.address && (
+          <div className="browse-banner">
+            <div>
+              <strong>You’re free to explore.</strong>
+              <span>
+                Connect your wallet to create a policy, file a claim, or request a decision.
+              </span>
+            </div>
+            <button className="btn ghost small" onClick={() => setConnectionIntent('browse')}>
+              <Wallet size={14} />
+              Connect wallet
+            </button>
+          </div>
+        )}
 
-          <aside className="how-card">
-            <p className="kicker">How a decision is made</p>
-            <ol className="steps">
-              <li>
-                <span className="step-no">01</span>
-                <div>
-                  <strong>Policy on chain</strong>
-                  <p>Coverage, wording, limit, deductible and every condition, fixed before a claim.</p>
-                </div>
-              </li>
-              <li>
-                <span className="step-no">02</span>
-                <div>
-                  <strong>Document committed</strong>
-                  <p>The holder files a URL and its SHA-256. The committee downloads those exact bytes.</p>
-                </div>
-              </li>
-              <li>
-                <span className="step-no">03</span>
-                <div>
-                  <strong>Committee rules</strong>
-                  <p>Outcome, payout band and one finding per condition. The insurer settles what the policy allows.</p>
-                </div>
-              </li>
-            </ol>
-          </aside>
+        <section className="stats" aria-label="Contract totals" aria-busy={loading}>
+          <Stat
+            label="Policies on chain"
+            value={state ? String(policies.length) : '···'}
+            note="Terms recorded on chain"
+          />
+          <Stat
+            label="Claims filed"
+            value={state ? String(claims.length) : '···'}
+            note="Evidence submitted for review"
+          />
+          <Stat
+            label="Awaiting review"
+            value={state ? String(openCount) : '···'}
+            note="Open claims and evidence requests"
+          />
+          <Stat
+            label="Settled from pools"
+            value={state ? `${formatGen(paid)} GEN` : '···'}
+            note="Accounted for on Studionet"
+          />
         </section>
 
-        <section className="stats" aria-label="Contract totals">
-          <Stat label="Policies" value={String(policies.length)} />
-          <Stat label="Claims" value={String(claims.length)} />
-          <Stat label="Open reviews" value={String(stats.open)} />
-          <Stat label="Paid out" value={`${formatGen(stats.paid)} GEN`} />
-        </section>
-
-        <section className="board">
+        <section className="board" id="workspace" aria-labelledby="workspace-title" tabIndex={-1}>
           <div className="board-head">
             <div>
-              <h2>{tab === 'policies' ? 'Policies' : 'Claims'}</h2>
-              <p>
-                {tab === 'policies'
-                  ? 'Live from the contract. Open a policy to read its wording and conditions.'
-                  : 'Every verdict, payout band and condition finding is stored on chain.'}
-              </p>
+              <h2 id="workspace-title">{tab === 'policies' ? 'Policy register' : 'Claims ledger'}</h2>
+              <p>Explore policies, follow claims, and see how each decision was reached.</p>
             </div>
             <div className="board-actions">
-              <button className="btn ghost small" onClick={() => void load()} disabled={loading}>
-                <RefreshCw size={14} className={loading ? 'spin' : undefined} /> Refresh
+              <button
+                className="btn ghost small"
+                disabled={loading || Boolean(busy)}
+                onClick={() => void load()}
+              >
+                <RefreshCw size={14} className={loading ? 'spin' : undefined} />
+                {loading ? 'Refreshing' : 'Refresh'}
               </button>
-              {tab === 'policies' ? (
-                <button className="btn primary small" onClick={() => setModal('policy')}>
-                  <Plus size={14} /> New policy
-                </button>
-              ) : (
-                <button className="btn primary small" onClick={() => setModal('claim')}>
-                  <FileText size={14} /> File claim
-                </button>
-              )}
+              <button
+                className="btn primary small"
+                onClick={() => (tab === 'policies' ? openPolicy() : openClaim())}
+              >
+                <Plus size={14} />
+                {tab === 'policies' ? 'Write a policy' : 'File a claim'}
+              </button>
             </div>
           </div>
-
-          {error && (
-            <div className="notice error">
-              <AlertCircle size={16} /> {error}
+          {wallet.isWrongChain && (
+            <div className="notice warn" role="status">
+              <AlertCircle size={17} />
+              <span>
+                Your wallet is on another network. Your next transaction will ask you to switch to
+                Studionet.
+              </span>
             </div>
           )}
-
-          {loading && !state ? (
-            <div className="empty">
-              <Loader2 className="spin" size={22} /> Reading the contract…
-            </div>
-          ) : tab === 'policies' ? (
-            policies.length === 0 ? (
-              <Empty
-                title="No policies yet"
-                body="An insurer writes the first policy: coverage, wording, limit and the conditions a claim will be judged against."
-                action={<button className="btn primary" onClick={() => setModal('policy')}>Write a policy</button>}
-              />
-            ) : (
-              <div className="grid">
-                {policies.map((policy) => (
-                  <PolicyCard key={policy.id} policy={policy} onOpen={() => setSelectedPolicy(policy)} />
-                ))}
-              </div>
-            )
-          ) : claims.length === 0 ? (
-            <Empty
-              title="No claims filed"
-              body="A claim commits a document URL and its SHA-256. The committee reads that document itself, so a reworded summary cannot change the result."
-              action={<button className="btn primary" onClick={() => setModal('claim')}>File a claim</button>}
-            />
-          ) : (
-            <div className="stack">
-              {claims.map((claim) => (
-                <ClaimRow key={claim.id} claim={claim} onOpen={() => setSelectedClaim(claim)} />
+          <div className="workspace-bar">
+            <div className="workspace-tabs" role="tablist" aria-label="Policy and claim views">
+              {(['policies', 'claims'] as const).map((item) => (
+                <button
+                  key={item}
+                  id={`tab-${item}`}
+                  role="tab"
+                  aria-selected={tab === item}
+                  aria-controls="workspace-panel"
+                  tabIndex={tab === item ? 0 : -1}
+                  className={tab === item ? 'is-active' : ''}
+                  onClick={() => switchTab(item)}
+                  onKeyDown={(event) => {
+                    if (['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) {
+                      event.preventDefault();
+                      const next =
+                        event.key === 'Home'
+                          ? 'policies'
+                          : event.key === 'End'
+                            ? 'claims'
+                            : tab === 'claims'
+                              ? 'policies'
+                              : 'claims';
+                      switchTab(next);
+                      document.getElementById(`tab-${next}`)?.focus();
+                    }
+                  }}
+                >
+                  {item === 'policies' ? <ShieldCheck size={15} /> : <FileText size={15} />}
+                  {item === 'policies' ? 'Policies' : 'Claims'}
+                  <span>
+                    {state ? (item === 'policies' ? policies.length : claims.length) : '···'}
+                  </span>
+                </button>
               ))}
             </div>
-          )}
-        </section>
-
-        <section className="principle">
-          <div>
-            <p className="eyebrow">Why this needs GenLayer</p>
-            <h2>A judgement, not a lookup.</h2>
-            <p>
-              Whether a clause covers an incident, and how much of a claim the paperwork supports, is not a
-              formula. It is a reading of language against facts. GenLayer lets a validator committee reach
-              consensus on that reading and write the result on chain, with the evidence it used still
-              verifiable afterwards.
-            </p>
+            <label className="search">
+              <Search size={16} />
+              <input
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder={tab === 'policies' ? 'Search policies…' : 'Search claims…'}
+                aria-label={tab === 'policies' ? 'Search policies' : 'Search claims'}
+              />
+              {query && (
+                <button className="icon-btn" aria-label="Clear search" onClick={() => setQuery('')}>
+                  <X size={14} />
+                </button>
+              )}
+            </label>
           </div>
-          <ul className="guarantees">
-            <li><strong>Evidence, not assertions.</strong> The committee fetches the document itself and refuses it unless it hashes to the committed digest.</li>
-            <li><strong>One verdict per revision.</strong> A judged revision cannot be rerun, and a declined claim gets a single appeal with new evidence.</li>
-            <li><strong>Payout from the policy.</strong> The model picks a band; the contract applies the limit and deductible and checks the pool.</li>
-          </ul>
+          <div className="toolbar">
+            {tab === 'claims' ? (
+              <div className="filters" aria-label="Filter claims by status">
+                {FILTERS.map((item) => (
+                  <button
+                    key={item.key}
+                    className={`chip ${filter === item.key ? 'is-on' : ''}`}
+                    aria-pressed={filter === item.key}
+                    onClick={() => setFilter(item.key)}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <span className="toolbar-note">
+                All policies <span>· Public ledger</span>
+              </span>
+            )}
+            <span className="result-count" role="status">
+              {state
+                ? `${tab === 'policies' ? filteredPolicies.length : filteredClaims.length} shown`
+                : loading
+                  ? 'Connecting to Studionet'
+                  : 'Data unavailable'}
+            </span>
+          </div>
+          {error && state && (
+            <div className="notice warn" role="alert">
+              <AlertCircle size={17} />
+              <span>Couldn’t refresh. Showing the last loaded records.</span>
+              <button className="text-button" onClick={() => void load()} disabled={loading}>
+                Try again
+              </button>
+            </div>
+          )}
+          <div
+            id="workspace-panel"
+            role="tabpanel"
+            aria-labelledby={`tab-${tab}`}
+            aria-busy={loading}
+          >
+            {!state && loading ? (
+              <div className="loading-state" role="status">
+                <Loader2 size={20} className="spin" />
+                <strong>Reading the public ledger</strong>
+                <p>Fetching policies and claims from Studionet.</p>
+                <div className="skeleton-grid" aria-hidden="true">
+                  <i />
+                  <i />
+                  <i />
+                </div>
+              </div>
+            ) : !state && error ? (
+              <div className="empty connection-error" role="alert">
+                <span className="empty-icon">
+                  <AlertCircle size={24} />
+                </span>
+                <h3>The ledger couldn’t be reached</h3>
+                <p>We couldn’t load policies and claims from Studionet. Try connecting again.</p>
+                <button className="btn primary" onClick={() => void load()}>
+                  <RefreshCw size={15} />
+                  Try again
+                </button>
+                <details>
+                  <summary>Connection details</summary>
+                  <p>{error}</p>
+                </details>
+              </div>
+            ) : tab === 'policies' ? (
+              filteredPolicies.length ? (
+                <div className="policy-grid">
+                  {filteredPolicies.map((policy) => (
+                    <PolicyCard
+                      key={policy.id}
+                      policy={policy}
+                      onOpen={() => setSelectedPolicyId(policy.id)}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <Empty
+                  search={policies.length > 0}
+                  title={policies.length ? 'No matching policies' : 'The first policy starts here'}
+                  body={
+                    policies.length
+                      ? 'Try another coverage name, policy ID, or wallet address.'
+                      : 'Record the coverage, conditions, and funding that every future claim will be reviewed against.'
+                  }
+                  action={
+                    <button
+                      className="btn ghost"
+                      onClick={() => (policies.length ? setQuery('') : openPolicy())}
+                    >
+                      {policies.length ? 'Clear search' : 'Write a policy'}
+                    </button>
+                  }
+                />
+              )
+            ) : filteredClaims.length ? (
+              <ClaimLedger
+                claims={filteredClaims}
+                onOpen={(claim) => setSelectedClaimId(claim.id)}
+              />
+            ) : (
+              <Empty
+                search={claims.length > 0}
+                title={claims.length ? 'No matching claims' : 'No claims filed yet'}
+                body={
+                  claims.length
+                    ? 'Try another search or choose a different status.'
+                    : 'When a policyholder submits evidence, their claim and its review will appear here.'
+                }
+                action={
+                  <button
+                    className="btn ghost"
+                    onClick={() => {
+                      if (claims.length) {
+                        setQuery('');
+                        setFilter('ALL');
+                      } else openClaim();
+                    }}
+                  >
+                    {claims.length ? 'Clear filters' : 'File a claim'}
+                  </button>
+                }
+              />
+            )}
+          </div>
+          <p className="ledger-caption">
+            <ShieldCheck size={13} />
+            Read directly from the GenLayer contract
+            {updatedAt && (
+              <span>
+                Updated {updatedAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              </span>
+            )}
+          </p>
         </section>
       </main>
 
-      <footer className="site-footer">
-        <span>Claimline · Studionet {GENLAYER.chainId}</span>
-        <a href={contractLink()} target="_blank" rel="noreferrer">
-          {shortAddress(GENLAYER.contract)} <ArrowUpRight size={12} />
-        </a>
-      </footer>
-
+      <Footer />
       {busy && (
-        <div className="busy-bar">
-          <Loader2 className="spin" size={15} /> {busy}… waiting for the committee
+        <div className="busy-bar" role="status">
+          <Loader2 className="spin" size={16} />
+          {busy} · waiting for confirmation
         </div>
       )}
-
       {toast && (
-        <div className={`toast ${toast.kind}`}>
-          {toast.kind === 'ok' ? <ShieldCheck size={16} /> : <AlertCircle size={16} />}
-          {toast.text}
+        <div className={`toast ${toast.kind}`} role={toast.kind === 'err' ? 'alert' : 'status'}>
+          {toast.kind === 'ok' ? <ShieldCheck size={18} /> : <AlertCircle size={18} />}
+          <span>{toast.text}</span>
+          <button
+            className="icon-btn"
+            aria-label="Dismiss notification"
+            onClick={() => setToast(null)}
+          >
+            <X size={16} />
+          </button>
         </div>
       )}
-
       {selectedPolicy && (
         <PolicyDrawer
           policy={selectedPolicy}
-          onClose={() => setSelectedPolicy(null)}
+          onClose={() => setSelectedPolicyId(null)}
           onFileClaim={() => {
-            setSelectedPolicy(null);
-            setModal('claim');
+            openClaim(selectedPolicy.id);
+            setSelectedPolicyId(null);
           }}
         />
       )}
-
       {selectedClaim && (
         <ClaimDrawer
+          key={selectedClaim.id}
           claim={selectedClaim}
+          insurer={selectedClaimPolicy?.insurer}
           canAdjudicate={canAdjudicate(selectedClaim)}
           wallet={wallet.address}
           busy={busy}
-          onClose={() => setSelectedClaim(null)}
-          onAdjudicate={() =>
-            void act('Decision', async () => {
-              await adjudicate(selectedClaim.id);
-              refreshSelectedClaim();
-            })
-          }
-          onSettle={() =>
-            void act('Settlement', async () => {
-              await settle(selectedClaim.id);
-              refreshSelectedClaim();
-            })
-          }
+          feedback={toast}
+          onConnect={() => setConnectionIntent('browse')}
+          onClose={() => setSelectedClaimId(null)}
+          onAdjudicate={() => void act('Decision', () => adjudicate(selectedClaim.id))}
+          onSettle={() => void act('Settlement', () => settle(selectedClaim.id))}
           onReplace={(uri, digest) =>
-            void act('Evidence revision', async () => {
-              await replaceEvidence(selectedClaim.id, uri, digest);
-              refreshSelectedClaim();
-            })
+            void act('Evidence revision', () => replaceEvidence(selectedClaim.id, uri, digest))
           }
         />
       )}
-
       {modal === 'policy' && (
         <NewPolicyModal
           onClose={() => setModal(null)}
           onDone={() => {
             setModal(null);
             void load();
+            setToast({ kind: 'ok', text: 'Policy recorded on chain.' });
           }}
         />
       )}
       {modal === 'claim' && (
         <FileClaimModal
           policies={policies}
+          initialPolicyId={filingPolicyId}
+          wallet={wallet.address}
           onClose={() => setModal(null)}
           onDone={() => {
             setModal(null);
+            switchTab('claims');
             void load();
+            setToast({ kind: 'ok', text: 'Claim submitted on chain.' });
           }}
         />
       )}
-    </div>
-  );
-}
-
-function Stat({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="stat">
-      <span className="stat-label">{label}</span>
-      <span className="stat-value">{value}</span>
-    </div>
-  );
-}
-
-function PolicyCard({ policy, onOpen }: { policy: Policy; onOpen: () => void }) {
-  return (
-    <article className="card policy-card" onClick={onOpen} role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && onOpen()}>
-      <header className="card-head">
-        <div>
-          <span className="kicker">Policy {policy.id}</span>
-          <h3>{policy.coverage}</h3>
-        </div>
-        <span className={`pill ${statusTone(policy.status)}`}>{statusLabel(policy.status)}</span>
-      </header>
-
-      <dl className="facts">
-        <div><dt>Limit</dt><dd>{formatGen(policy.limitWei)} GEN</dd></div>
-        <div><dt>Pool</dt><dd>{formatGen(policy.poolWei)} GEN</dd></div>
-        <div><dt>Deductible</dt><dd>{formatGen(policy.deductibleWei)} GEN</dd></div>
-        <div><dt>Claims</dt><dd>{policy.claimCount}</dd></div>
-      </dl>
-
-      <ul className="condition-list">
-        {policy.conditions.slice(0, 3).map((condition) => (
-          <li key={condition}>{condition}</li>
-        ))}
-        {policy.conditions.length > 3 && <li className="more">+{policy.conditions.length - 3} more</li>}
-      </ul>
-
-      <footer className="card-foot">
-        <span>Holder {shortAddress(policy.holder)}</span>
-        <span>Covers to {formatDate(policy.endsAt)}</span>
-      </footer>
-    </article>
-  );
-}
-
-function ClaimRow({ claim, onOpen }: { claim: Claim; onOpen: () => void }) {
-  return (
-    <article className="card claim-row" onClick={onOpen} role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && onOpen()}>
-      <div className="claim-main">
-        <span className="kicker">
-          Claim {claim.id} · Policy {claim.policyId}
-        </span>
-        <h3>{formatGen(claim.claimedWei)} GEN claimed</h3>
-        <p className="claim-sub">
-          Revision {claim.evidenceRevision} · {claim.evaluatedRevision > 0 ? `judged rev ${claim.evaluatedRevision}` : 'not judged yet'}
-          {claim.appeals > 0 ? ` · appeal ${claim.appeals}` : ''}
-        </p>
-      </div>
-
-      <div className="claim-metrics">
-        <div>
-          <span>Payout</span>
-          <strong>{formatGen(claim.payoutWei)} GEN</strong>
-        </div>
-        <div>
-          <span>Band</span>
-          <strong>{claim.payoutBand}%</strong>
-        </div>
-        <div>
-          <span>Confidence</span>
-          <strong>{claim.confidenceBand === 'NONE' ? '—' : claim.confidenceBand}</strong>
-        </div>
-      </div>
-
-      <div className="claim-status">
-        <span className={`pill ${statusTone(claim.status)}`}>{statusLabel(claim.status)}</span>
-        {claim.outcome !== 'NONE' && <p className="claim-reason">{claim.reason}</p>}
-      </div>
-    </article>
-  );
-}
-
-function Empty({ title, body, action }: { title: string; body: string; action: React.ReactNode }) {
-  return (
-    <div className="empty">
-      <h3>{title}</h3>
-      <p>{body}</p>
-      {action}
+      {connectionIntent && (
+        <ConnectWalletModal
+          onClose={() => setConnectionIntent(null)}
+          onConnected={() => {
+            const intent = connectionIntent;
+            setConnectionIntent(null);
+            if (intent === 'claim' || intent === 'policy') setModal(intent);
+          }}
+        />
+      )}
     </div>
   );
 }
