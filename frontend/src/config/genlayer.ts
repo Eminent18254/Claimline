@@ -13,7 +13,7 @@ import { studionet } from 'genlayer-js/chains';
 export const GENLAYER_CHAIN = studionet;
 
 /** The Claimline deployment. Public, so it can live in source. */
-const DEPLOYED_CONTRACT = '0x7eC02176fe18FE2f2E5f5F5b0E731D8471416829';
+const DEPLOYED_CONTRACT = '0x8506A82203650A991FCDfDA3d6aee670cA5FdB62';
 
 const EXPLORER_URL = 'https://explorer-studio.genlayer.com';
 const ADDRESS_PATTERN = /^0x[0-9a-fA-F]{40}$/;

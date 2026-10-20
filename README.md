@@ -13,13 +13,17 @@ The problem is not storing claims. It is deciding them. On a normal platform the
 
 Claimline runs on **GenLayer Studionet (chain 61999)** with test funds only.
 
+## Live audit
+
+A full contract and browser audit was completed on 20 October 2026: **38/38 checks passed across 18 transactions**, with build and UI tests green. See [AUDIT.md](AUDIT.md) for the transaction hashes and final state.
+
 ## Deployed contract
 
 | | |
 |---|---|
-| **Contract address** | `0x7eC02176fe18FE2f2E5f5F5b0E731D8471416829` |
-| **Explorer** | https://explorer-studio.genlayer.com/address/0x7eC02176fe18FE2f2E5f5F5b0E731D8471416829 |
-| **Deploy transaction** | https://explorer-studio.genlayer.com/tx/0x65326c01d2a3904b3fc5fd95aea5d06bc7611d4eed4c07dde9a72dac87f0c22e |
+| **Contract address** | `0x8506A82203650A991FCDfDA3d6aee670cA5FdB62` |
+| **Explorer** | https://explorer-studio.genlayer.com/address/0x8506A82203650A991FCDfDA3d6aee670cA5FdB62 |
+| **Deploy transaction** | https://explorer-studio.genlayer.com/tx/0xf2d814e27513bdc24973e43adfc962a7b3a1a92e8350880bd9b3ea59047f231d |
 | **Source** | `contracts/Claimline.py` |
 | **Runtime** | `py-genlayer:1jb45aa8ynh2a9c9xn3b7qqh8sm5q93hwfp7jqmwsfhh8jpz09h6` |
 | **Client SDK** | `genlayer-js` 1.x |
@@ -28,7 +32,7 @@ Claimline runs on **GenLayer Studionet (chain 61999)** with test funds only.
 Read the live state yourself:
 
 ```bash
-genlayer call 0x7eC02176fe18FE2f2E5f5F5b0E731D8471416829 get_state
+genlayer call 0x8506A82203650A991FCDfDA3d6aee670cA5FdB62 get_state
 ```
 
 ## Why this needs GenLayer

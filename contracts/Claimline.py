@@ -527,7 +527,7 @@ Report exactly {len(conditions)} entries in "conditions". List at least one inco
         return result
     # ------------------------------------------------------------------ writes
 
-    @gl.public.write
+    @gl.public.write.payable
     def create_policy(
         self,
         holder: str,
@@ -610,7 +610,7 @@ Report exactly {len(conditions)} entries in "conditions". List at least one inco
         self.policy_order.append(policy_id)
         return policy_id
 
-    @gl.public.write
+    @gl.public.write.payable
     def fund_policy(self, policy_id: str) -> None:
         """Add GEN to a policy pool. Anyone may contribute."""
         policy = self._policy(policy_id)
