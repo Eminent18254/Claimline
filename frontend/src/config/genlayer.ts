@@ -4,29 +4,26 @@
  * Claimline runs on GenLayer Studionet (chain 61999). The chain object comes
  * from the SDK so the id, RPC and currency cannot drift from the client.
  *
- * The contract address has a compiled-in fallback because `.env` is gitignored:
- * without it a fresh clone or a host with no env vars would boot with no
- * contract. A stored override is validated before it is trusted.
+ * The verified deployment manifest is updated by npm run deploy:contract.
+ * Every Vercel build uses it, even if an older address remains in host env vars.
  */
 import { studionet } from 'genlayer-js/chains';
+import deployment from './deployment.json';
 
 export const GENLAYER_CHAIN = studionet;
 
 /** The Claimline deployment. Public, so it can live in source. */
-const DEPLOYED_CONTRACT = '0x8506A82203650A991FCDfDA3d6aee670cA5FdB62';
+const DEPLOYED_CONTRACT = deployment.address;
 
 const EXPLORER_URL = 'https://explorer-studio.genlayer.com';
 const ADDRESS_PATTERN = /^0x[0-9a-fA-F]{40}$/;
-const CONFIGURED_CONTRACT = String(
-  import.meta.env.VITE_GENLAYER_CLAIMLINE_CONTRACT ?? '',
-).trim();
 
 export const GENLAYER = {
   chainId: GENLAYER_CHAIN.id,
   chainName: GENLAYER_CHAIN.name,
   rpcUrl: GENLAYER_CHAIN.rpcUrls.default.http[0],
   explorerUrl: EXPLORER_URL,
-  contract: ADDRESS_PATTERN.test(CONFIGURED_CONTRACT) ? CONFIGURED_CONTRACT : DEPLOYED_CONTRACT,
+  contract: DEPLOYED_CONTRACT,
 } as const;
 
 export function isConfigured(): boolean {

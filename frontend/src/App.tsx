@@ -19,6 +19,9 @@ import {
   readError,
   replaceEvidence,
   settle,
+  closePolicy,
+  withdrawUnused,
+  latestWrite,
 } from '@/lib/genlayer/client';
 import { canAdjudicate, formatGen, shortAddress, type ClaimlineState } from '@/lib/claimline';
 import { contractLink } from '@/config/genlayer';
@@ -193,7 +196,7 @@ function Workspace({ onHome }: { onHome: () => void }) {
     try {
       await work();
       await load();
-      setToast({ kind: 'ok', text: `${label} confirmed on chain.` });
+      setToast({ kind: 'ok', text: `${label} finalized on chain. ${latestWrite()?.hash ?? ''}` });
     } catch (cause) {
       setToast({ kind: 'err', text: readError(cause) });
     } finally {
@@ -301,7 +304,7 @@ function Workspace({ onHome }: { onHome: () => void }) {
           <Stat
             label="Settled from pools"
             value={state ? `${formatGen(paid)} GEN` : '···'}
-            note="Accounted for on Studionet"
+            note="Transferred to claimant wallets"
           />
         </section>
 
@@ -534,7 +537,7 @@ function Workspace({ onHome }: { onHome: () => void }) {
       {busy && (
         <div className="busy-bar" role="status">
           <Loader2 className="spin" size={16} />
-          {busy} · waiting for confirmation
+          {busy} · waiting for finalization
         </div>
       )}
       {toast && (
@@ -553,6 +556,11 @@ function Workspace({ onHome }: { onHome: () => void }) {
       {selectedPolicy && (
         <PolicyDrawer
           policy={selectedPolicy}
+          wallet={wallet.address}
+          busy={busy}
+          feedback={toast}
+          onClosePolicy={() => void act('Policy closure', () => closePolicy(selectedPolicy.id))}
+          onWithdraw={() => void act('Unused funds recovery', () => withdrawUnused(selectedPolicy.id, selectedPolicy.recoverableWei))}
           onClose={() => setSelectedPolicyId(null)}
           onFileClaim={() => {
             openClaim(selectedPolicy.id);

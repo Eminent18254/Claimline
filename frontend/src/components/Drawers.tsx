@@ -29,10 +29,20 @@ export function PolicyDrawer({
   policy,
   onClose,
   onFileClaim,
+  wallet,
+  busy,
+  feedback,
+  onClosePolicy,
+  onWithdraw,
 }: {
   policy: Policy;
   onClose: () => void;
   onFileClaim: () => void;
+  wallet: string | null;
+  busy: string | null;
+  feedback?: { kind: 'ok' | 'err'; text: string } | null;
+  onClosePolicy: () => void;
+  onWithdraw: () => void;
 }) {
   return (
     <Dialog title={`Policy ${policy.id}: ${policy.coverage}`} variant="drawer" onClose={onClose}>
@@ -71,6 +81,10 @@ export function PolicyDrawer({
             <dt>Settled from pool</dt>
             <dd>{formatGen(policy.paidWei)} GEN</dd>
           </div>
+          <div><dt>Reserved for claims</dt><dd>{formatGen(policy.reservedWei || '0')} GEN</dd></div>
+          <div><dt>Recovered by insurer</dt><dd>{formatGen(policy.withdrawnWei || '0')} GEN</dd></div>
+          <div><dt>Available to recover</dt><dd>{formatGen(policy.recoverableWei || '0')} GEN</dd></div>
+          <div><dt>Reporting deadline</dt><dd>{formatDate(policy.reportingEndsAt || policy.endsAt)}</dd></div>
           <div>
             <dt>Claims filed</dt>
             <dd>{policy.claimCount}</dd>
@@ -103,11 +117,19 @@ export function PolicyDrawer({
       </div>
 
       <footer className="drawer-foot">
+        {feedback && <p role={feedback.kind === 'err' ? 'alert' : 'status'}>{feedback.text}</p>}
         <button className="btn primary" onClick={onFileClaim} disabled={policy.status !== 'ACTIVE'}>
           <FileText size={15} /> File a claim
         </button>
         {policy.status !== 'ACTIVE' && (
           <p className="foot-note">This policy is closed to new claims.</p>
+        )}
+        {sameAddress(wallet || '', policy.insurer) && (
+          <>
+            {policy.status === 'ACTIVE' && <button className="btn" onClick={onClosePolicy} disabled={Boolean(busy) || Date.now() / 1000 < Number(policy.reportingEndsAt || policy.endsAt)}>Close policy</button>}
+            {policy.status === 'CLOSED' && <button className="btn" onClick={onWithdraw} disabled={Boolean(busy) || BigInt(policy.recoverableWei || '0') <= 0n}>Recover unused GEN</button>}
+            <p className="foot-note">Close after the reporting deadline. Unresolved claims and remaining appeals keep their collateral reserved.</p>
+          </>
         )}
       </footer>
     </Dialog>
@@ -328,7 +350,7 @@ export function ClaimDrawer({
 
         {claim.status === 'SETTLED' && (
           <div className="notice ok">
-            <Check size={15} /> Settled. The payout was drawn from the policy pool.
+            <Check size={15} /> Settled. GEN was sent to the claimant wallet on finalization.
           </div>
         )}
       </div>

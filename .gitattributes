@@ -1,0 +1,3 @@
+contracts/*.py text eol=lf
+verification/*.py text eol=lf
+*.json text eol=lf

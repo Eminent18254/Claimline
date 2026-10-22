@@ -1,5 +1,7 @@
 # Claimline Live Audit
 
+> Historical audit of v1, which recorded settlement accounting without transferring GEN. These transactions do not prove recipient payouts. The replacement v2 deployment and current verification evidence are in `verification/`.
+
 **Date:** 20 October 2026  
 **Network:** GenLayer Studionet, chain 61999  
 **Contract:** `0x8506A82203650A991FCDfDA3d6aee670cA5FdB62`  

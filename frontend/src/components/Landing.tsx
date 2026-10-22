@@ -56,7 +56,7 @@ const FAQS = [
   ],
   [
     'Does this use real insurance funds?',
-    'Claimline currently runs on GenLayer Studionet with test GEN. Settlement is recorded against the policy pool; the current deployment does not transfer a payout to an external wallet.',
+    'Claimline runs on GenLayer Studionet with test GEN. Settlement transfers native GEN to the claimant wallet on finalization. Insurers can recover closed-policy surplus while existing claims and appeals keep their collateral reserved.',
   ],
 ];
 

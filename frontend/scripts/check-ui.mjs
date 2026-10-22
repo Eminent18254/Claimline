@@ -117,6 +117,9 @@ async function fixturePage(mode = 'populated', path = '/app') {
       Object.assign(data.claims.find(claim => claim.id === id), { status: 'APPROVED', outcome: 'APPROVED', evaluatedRevision: 1, decisionRevision: 1, decisionIsCurrent: true, payoutWei: '${wei(200)}', payoutBand: 100, reason: 'The submitted evidence meets the policy conditions.' });
     };
     export const settle = async () => { throw new Error('Unexpected settlement in test'); };
+    export const closePolicy = async () => {};
+    export const withdrawUnused = async () => {};
+    export const latestWrite = () => null;
     export const replaceEvidence = async () => {};
     export const createPolicy = async input => { window.__created = input; };
     export const fileClaim = async input => { window.__filed = input; };

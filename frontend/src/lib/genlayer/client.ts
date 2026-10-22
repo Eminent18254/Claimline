@@ -8,7 +8,7 @@
  * Three failure modes are handled here, all observed against deployed contracts:
  *
  *   1. A write is not finished when the hash comes back. Nothing is reported as
- *      done until the transaction reaches ACCEPTED and the leader receipt says
+ *      done until the transaction reaches FINALIZED and the leader receipt says
  *      SUCCESS.
  *   2. The RPC occasionally drops a connection, so the transport is retried
  *      instead of failing the whole write.
@@ -174,6 +174,9 @@ export async function restore(): Promise<void> {
 // ------------------------------------------------------------------- errors
 
 type Receipt = {
+  status?: number | string;
+  statusName?: string;
+  triggered_transactions?: string[];
   execution_result?: string;
   result?: string | { payload?: string };
   result_name?: string;
@@ -259,9 +262,12 @@ export function readError(error: unknown): string {
   if (/can be replaced at most/i.test(text)) return 'This claim has used all of its evidence revisions.';
   if (/appealed only once/i.test(text)) return 'A declined claim may be appealed only once.';
   if (/Only the recorded holder/i.test(text)) return 'Only the recorded holder can file a claim on this policy.';
+  if (/Only the holder or the insurer/i.test(text)) return 'Only the holder or the insurer can request a decision.';
   if (/Only the holder/i.test(text)) return 'Only the holder can replace the document on this claim.';
   if (/Only the insurer/i.test(text)) return 'Only the insurer can perform that action.';
-  if (/Only the holder or the insurer/i.test(text)) return 'Only the holder or the insurer can request a decision.';
+  if (/reporting period must end/i.test(text)) return 'The reporting deadline must pass before the policy can close.';
+  if (/reserved claim collateral/i.test(text)) return 'These GEN are reserved for an existing claim or appeal.';
+  if (/Close the policy before/i.test(text)) return 'Close the policy after its reporting deadline before recovering unused GEN.';
   if (/Only an approved claim/i.test(text)) return 'Only an approved claim can be settled.';
   if (/does not cover/i.test(text)) return 'The policy pool does not hold enough GEN to cover this payout.';
   if (/outside the covered period/i.test(text)) return 'The incident date falls outside the policy period.';
@@ -284,6 +290,18 @@ export function readError(error: unknown): string {
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export type WriteResult = { hash: string; receipt: Receipt };
+let lastWrite: WriteResult | null = null;
+export function latestWrite(): WriteResult | null { return lastWrite; }
+
+function checkReceipt(receipt: Receipt): void {
+  const leader = receipt.consensus_data?.leader_receipt?.[0];
+  if (leader?.execution_result !== 'SUCCESS') {
+    throw new Error(leader ? readError({ data: { receipt: leader } }) : 'The transaction has no successful execution receipt.');
+  }
+  if (receipt.result_name === 'MAJORITY_DISAGREE') {
+    throw new Error('The validator committee did not reach agreement on this document.');
+  }
+}
 
 async function send(functionName: string, args: unknown[], value = 0n): Promise<WriteResult> {
   if (!isConfigured()) throw new Error('The Claimline contract is not configured.');
@@ -301,20 +319,17 @@ async function send(functionName: string, args: unknown[], value = 0n): Promise<
 
   const client = getClient();
   let hash: string | null = null;
-  for (let attempt = 0; ; attempt += 1) {
-    try {
-      hash = (await client.writeContract({
-        account: activeAccount(),
-        address: GENLAYER.contract as `0x${string}`,
-        functionName,
-        args: args as never[],
-        value,
-      })) as unknown as string;
-      break;
-    } catch (error) {
-      if (attempt >= 1 || !isTransientRpc(error)) throw new Error(readError(error));
-      await sleep(1800);
-    }
+  // Retry polling only. A lost submission response can hide a committed write.
+  try {
+    hash = (await client.writeContract({
+      account: activeAccount(),
+      address: GENLAYER.contract as `0x${string}`,
+      functionName,
+      args: args as never[],
+      value,
+    })) as unknown as string;
+  } catch (error) {
+    throw new Error(readError(error));
   }
 
   let receipt: Receipt | null = null;
@@ -326,6 +341,28 @@ async function send(functionName: string, args: unknown[], value = 0n): Promise<
         retries: 400,
         interval: 3000,
       })) as unknown as Receipt;
+      checkReceipt(receipt);
+      receipt = (await client.waitForTransactionReceipt({
+        hash: hash as never,
+        status: TransactionStatus.FINALIZED,
+        retries: 600,
+        interval: 3000,
+      })) as unknown as Receipt;
+      receipt = (await client.getTransaction({ hash: hash as never })) as unknown as Receipt;
+      checkReceipt(receipt);
+      if (receipt.statusName !== 'FINALIZED' && String(receipt.status) !== '7') {
+        throw new Error('The transaction has not finalized yet.');
+      }
+      for (const childHash of receipt.triggered_transactions ?? []) {
+        const child = (await client.waitForTransactionReceipt({
+          hash: childHash as never, status: TransactionStatus.FINALIZED,
+          retries: 600, interval: 3000,
+        })) as unknown as Receipt;
+        if (child.consensus_data?.leader_receipt?.length) checkReceipt(child);
+        if (child.result_name === 'MAJORITY_DISAGREE') {
+          throw new Error('The emitted GEN transfer failed. Check the transaction before continuing.');
+        }
+      }
       break;
     } catch (error) {
       if (attempt >= 3 || !isTransientRpc(error)) throw new Error(readError(error));
@@ -333,16 +370,9 @@ async function send(functionName: string, args: unknown[], value = 0n): Promise<
     }
   }
 
-  const leader = receipt?.consensus_data?.leader_receipt?.[0];
-  if (leader && leader.execution_result && leader.execution_result !== 'SUCCESS') {
-    throw new Error(readError({ data: { receipt: leader } }));
-  }
-  if (receipt?.result_name === 'MAJORITY_DISAGREE') {
-    throw new Error(
-      'The validator committee did not reach agreement on this document, so nothing was written. Try again.',
-    );
-  }
-  return { hash: hash as string, receipt: receipt as Receipt };
+  lastWrite = { hash: hash as string, receipt: receipt as Receipt };
+  window.dispatchEvent(new CustomEvent('claimline:finalized', { detail: { hash, functionName } }));
+  return lastWrite;
 }
 
 // -------------------------------------------------------------------- reads
@@ -363,6 +393,7 @@ async function read(functionName: string, args: unknown[] = []): Promise<string>
     address: GENLAYER.contract as `0x${string}`,
     functionName,
     args: args as never[],
+    transactionHashVariant: 'latest-final' as never,
   });
   return typeof raw === 'string' ? raw : JSON.stringify(raw);
 }
@@ -463,6 +494,14 @@ export async function replaceEvidence(
 
 export async function settle(claimId: string): Promise<void> {
   await send('settle', [claimId]);
+}
+
+export async function closePolicy(policyId: string): Promise<void> {
+  await send('close_policy', [policyId]);
+}
+
+export async function withdrawUnused(policyId: string, wei: string): Promise<void> {
+  await send('withdraw_unused', [policyId, wei]);
 }
 
 export function stateAddress(): string | null {

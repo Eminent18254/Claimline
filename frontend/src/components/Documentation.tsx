@@ -90,8 +90,8 @@ export function Documentation({ onEnter, onHome }: { onEnter: () => void; onHome
               becomes a decision.
             </p>
             <div className="docs-note">
-              Current deployment: GenLayer Studionet. All amounts are test GEN. Settlement records a
-              pool deduction; it does not send funds to an external wallet.
+              Current deployment: GenLayer Studionet. All amounts are test GEN. Settlement sends
+              native GEN to the recorded claimant wallet when the transaction finalizes.
             </div>
           </header>
 
@@ -135,7 +135,7 @@ export function Documentation({ onEnter, onHome }: { onEnter: () => void; onHome
               </li>
               <li>
                 <strong>Confirm and wait.</strong> Approve the requested transaction in your wallet.
-                The app waits for an accepted receipt before showing success. Committee reviews can
+                The app waits for a finalized successful receipt before showing success. Committee reviews can
                 take one to two minutes or longer.
               </li>
             </ol>
@@ -238,6 +238,7 @@ export function Documentation({ onEnter, onHome }: { onEnter: () => void; onHome
                     <td>Close a policy</td>
                     <td>The insurer, through the contract’s close method</td>
                   </tr>
+                  <tr><td>Recover unused GEN</td><td>The insurer, after closure, while preserving every claim and appeal reserve</td></tr>
                 </tbody>
               </table>
             </div>
@@ -421,7 +422,7 @@ export function Documentation({ onEnter, onHome }: { onEnter: () => void; onHome
                   </tr>
                   <tr>
                     <td>Settled</td>
-                    <td>The approved amount was deducted from the policy pool.</td>
+                    <td>The approved GEN was sent from the policy pool to the claimant wallet.</td>
                     <td>The claim is final.</td>
                   </tr>
                 </tbody>
@@ -479,9 +480,10 @@ export function Documentation({ onEnter, onHome }: { onEnter: () => void; onHome
               total, and marks the claim Settled.
             </p>
             <div className="docs-note">
-              On this deployment, settlement is accounting on chain. No GEN is pushed to the
-              holder’s external wallet. A production insurance product would require a separate
-              payout mechanism.
+              Settlement emits a native GEN transfer to the recorded claimant on finalization.
+              The insurer may close a policy after its covered period and seven-day reporting
+              window end, then recover surplus GEN using withdraw_unused. Unresolved claims
+              and available appeals keep their maximum possible payout reserved.
             </div>
           </section>
 
@@ -546,14 +548,15 @@ export function Documentation({ onEnter, onHome }: { onEnter: () => void; onHome
                     <td>
                       <code>settle</code>
                     </td>
-                    <td>Record the approved pool deduction.</td>
+                    <td>Transfer the approved native GEN to the recorded claimant on finalization.</td>
                   </tr>
                   <tr>
                     <td>
                       <code>close_policy</code>
                     </td>
-                    <td>Prevent new claims against a policy.</td>
+                    <td>Close after the covered period and seven-day reporting window.</td>
                   </tr>
+                  <tr><td><code>withdraw_unused</code></td><td>Transfer closed-policy surplus to the insurer while preserving claim and appeal reserves.</td></tr>
                   <tr>
                     <td>
                       <code>get_state</code>

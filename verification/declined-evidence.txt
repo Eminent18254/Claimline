@@ -1,0 +1,9 @@
+SOFTWARE SUBSCRIPTION CANCELLATION NOTICE
+
+Reference: CL-AUDIT-2026-002
+Account holder: Claimline audit policyholder
+Service: Monthly project management software
+Event date: 16 October 2026
+Description: The account holder cancelled a software subscription after the free trial ended. No equipment was damaged and no physical incident took place.
+Amount requested: 0.50 GEN
+Status: This notice concerns a cancelled software subscription. It does not describe accidental damage to insured equipment and contains no repair estimate.

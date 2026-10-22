@@ -1,0 +1,3664 @@
+{
+  "deployment": {
+    "network": "Studionet",
+    "chainId": 61999,
+    "address": "0xc85B35932Bb3b5bAfc5d3C7770Fc2e4f0Bc71fd3",
+    "hash": "0x89e6df076c148c02bce7d85fd630215e0a51853d4275504c3ed316a316a091e6",
+    "status": "FINALIZED",
+    "sourceSha256": "222e3d1f30d1a845562c5273172ee9a2524b8d8f514cfa9c99712760e085e5ee",
+    "deployedSourceSha256": "222e3d1f30d1a845562c5273172ee9a2524b8d8f514cfa9c99712760e085e5ee",
+    "byteForByteMatch": true
+  },
+  "participants": {
+    "insurer": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+    "holder": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+    "stranger": "0xd02D27c7B19c2C40eFaCA8a0a1Ede626d58620FA"
+  },
+  "checks": [
+    {
+      "label": "Browser creates funded policy and waits for FINALIZED",
+      "passed": true
+    },
+    {
+      "label": "Holder files authenticated liquid damage",
+      "passed": true
+    },
+    {
+      "label": "Holder files out-of-scope evidence",
+      "passed": true
+    },
+    {
+      "label": "Cannot recover an active policy pool",
+      "passed": true
+    },
+    {
+      "label": "Cannot close before the reporting deadline",
+      "passed": true
+    },
+    {
+      "label": "Cannot settle an unadjudicated claim",
+      "passed": true
+    },
+    {
+      "label": "Browser requests real committee decision and waits for FINALIZED",
+      "passed": true
+    },
+    {
+      "label": "Unrelated wallet cannot settle approved claim",
+      "passed": true
+    },
+    {
+      "label": "Holder cannot redirect or authorize settlement",
+      "passed": true
+    },
+    {
+      "label": "Native GEN reaches approved claimant wallet",
+      "passed": true
+    },
+    {
+      "label": "Double payout rejects without changing balances",
+      "passed": true
+    },
+    {
+      "label": "Insurer closes reporting-expired policy",
+      "passed": true
+    },
+    {
+      "label": "Unresolved claim collateral cannot be withdrawn",
+      "passed": true
+    },
+    {
+      "label": "Zero withdrawal rejects",
+      "passed": true
+    },
+    {
+      "label": "Negative withdrawal rejects",
+      "passed": true
+    },
+    {
+      "label": "Unused native GEN reaches insurer while claim reserve remains",
+      "passed": true
+    },
+    {
+      "label": "Repeated withdrawal cannot consume remaining collateral",
+      "passed": true
+    }
+  ],
+  "transactions": [
+    {
+      "label": "Browser creates funded policy and waits for FINALIZED",
+      "hash": "0x1b93f9b83598a0acfa1a534a540f7ff3d55634f41f42f201cf08a7752413fdbc",
+      "method": "create_policy",
+      "sender": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+      "status": "FINALIZED",
+      "execution": "SUCCESS",
+      "beforeState": {
+        "policies": [],
+        "claims": [],
+        "policyVersion": "claimline-policy-v2",
+        "policyCount": 0,
+        "claimCount": 0
+      },
+      "afterState": {
+        "policies": [
+          {
+            "id": "p1",
+            "insurer": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+            "holder": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "coverage": "Steward review: liquid damage",
+            "wording": "This policy covers accidental liquid damage to equipment owned by the insured. A repair centre inspection and estimate must support the claim. Software subscriptions and voluntary cancellations are excluded.",
+            "conditions": [
+              "The incident occurred inside the covered period.",
+              "The document describes accidental liquid damage to insured equipment.",
+              "An authorised repair inspection confirms physical damage.",
+              "A repair estimate supports the claimed amount of 0.35 GEN."
+            ],
+            "limitWei": "1000000000000000000",
+            "deductibleWei": "100000000000000000",
+            "startsAt": "1790812800",
+            "endsAt": "1792077120",
+            "poolWei": "1000000000000000000",
+            "paidWei": "0",
+            "withdrawnWei": "0",
+            "reservedWei": "0",
+            "recoverableWei": "0",
+            "reportingEndsAt": "1792681920",
+            "claimCount": 0,
+            "status": "ACTIVE",
+            "policyVersion": "claimline-policy-v2"
+          }
+        ],
+        "claims": [],
+        "policyVersion": "claimline-policy-v2",
+        "policyCount": 1,
+        "claimCount": 0
+      },
+      "actualFrontendWrite": true,
+      "browserFinalizedEvent": {
+        "hash": "0x1b93f9b83598a0acfa1a534a540f7ff3d55634f41f42f201cf08a7752413fdbc",
+        "functionName": "create_policy"
+      },
+      "beforeBalances": {
+        "0xc85B35932Bb3b5bAfc5d3C7770Fc2e4f0Bc71fd3": "0",
+        "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71": "10600000000000004999",
+        "0x3654661080bC75Fd1674d5D81728Af424ff41622": "1000000000000000000",
+        "0xd02D27c7B19c2C40eFaCA8a0a1Ede626d58620FA": "1000000000000000000"
+      },
+      "afterBalances": {
+        "0xc85B35932Bb3b5bAfc5d3C7770Fc2e4f0Bc71fd3": "1000000000000000000",
+        "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71": "9600000000000004999",
+        "0x3654661080bC75Fd1674d5D81728Af424ff41622": "1000000000000000000",
+        "0xd02D27c7B19c2C40eFaCA8a0a1Ede626d58620FA": "1000000000000000000"
+      }
+    },
+    {
+      "label": "Holder files authenticated liquid damage",
+      "hash": "0x0df7a03e8408d31cc43b29aad510ebc91802c6a4dd41e9fd3db41368e631d1d7",
+      "method": "file_claim",
+      "args": [
+        "p1",
+        "1792022400",
+        "350000000000000000",
+        "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/equipment-damage-report.txt",
+        "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186"
+      ],
+      "value": "0",
+      "sender": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+      "status": "FINALIZED",
+      "beforeState": {
+        "policies": [
+          {
+            "id": "p1",
+            "insurer": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+            "holder": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "coverage": "Steward review: liquid damage",
+            "wording": "This policy covers accidental liquid damage to equipment owned by the insured. A repair centre inspection and estimate must support the claim. Software subscriptions and voluntary cancellations are excluded.",
+            "conditions": [
+              "The incident occurred inside the covered period.",
+              "The document describes accidental liquid damage to insured equipment.",
+              "An authorised repair inspection confirms physical damage.",
+              "A repair estimate supports the claimed amount of 0.35 GEN."
+            ],
+            "limitWei": "1000000000000000000",
+            "deductibleWei": "100000000000000000",
+            "startsAt": "1790812800",
+            "endsAt": "1792077120",
+            "poolWei": "1000000000000000000",
+            "paidWei": "0",
+            "withdrawnWei": "0",
+            "reservedWei": "0",
+            "recoverableWei": "0",
+            "reportingEndsAt": "1792681920",
+            "claimCount": 0,
+            "status": "ACTIVE",
+            "policyVersion": "claimline-policy-v2"
+          }
+        ],
+        "claims": [],
+        "policyVersion": "claimline-policy-v2",
+        "policyCount": 1,
+        "claimCount": 0
+      },
+      "beforeBalances": {
+        "0xc85B35932Bb3b5bAfc5d3C7770Fc2e4f0Bc71fd3": "1000000000000000000",
+        "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71": "9600000000000004999",
+        "0x3654661080bC75Fd1674d5D81728Af424ff41622": "1000000000000000000",
+        "0xd02D27c7B19c2C40eFaCA8a0a1Ede626d58620FA": "1000000000000000000"
+      },
+      "execution": "SUCCESS",
+      "afterState": {
+        "policies": [
+          {
+            "id": "p1",
+            "insurer": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+            "holder": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "coverage": "Steward review: liquid damage",
+            "wording": "This policy covers accidental liquid damage to equipment owned by the insured. A repair centre inspection and estimate must support the claim. Software subscriptions and voluntary cancellations are excluded.",
+            "conditions": [
+              "The incident occurred inside the covered period.",
+              "The document describes accidental liquid damage to insured equipment.",
+              "An authorised repair inspection confirms physical damage.",
+              "A repair estimate supports the claimed amount of 0.35 GEN."
+            ],
+            "limitWei": "1000000000000000000",
+            "deductibleWei": "100000000000000000",
+            "startsAt": "1790812800",
+            "endsAt": "1792077120",
+            "poolWei": "1000000000000000000",
+            "paidWei": "0",
+            "withdrawnWei": "0",
+            "reservedWei": "250000000000000000",
+            "recoverableWei": "0",
+            "reportingEndsAt": "1792681920",
+            "claimCount": 1,
+            "status": "ACTIVE",
+            "policyVersion": "claimline-policy-v2"
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "350000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/equipment-damage-report.txt",
+            "evidenceDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "status": "FILED",
+            "outcome": "NONE",
+            "payoutBand": 0,
+            "confidenceBand": "NONE",
+            "reason": "",
+            "conditions": [],
+            "inconsistencies": [],
+            "contentDigest": "",
+            "payoutWei": "0",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 0,
+            "decisionRevision": 0,
+            "appeals": 0,
+            "decisionIsCurrent": false
+          }
+        ],
+        "policyVersion": "claimline-policy-v2",
+        "policyCount": 1,
+        "claimCount": 1
+      },
+      "afterBalances": {
+        "0xc85B35932Bb3b5bAfc5d3C7770Fc2e4f0Bc71fd3": "1000000000000000000",
+        "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71": "9600000000000004999",
+        "0x3654661080bC75Fd1674d5D81728Af424ff41622": "1000000000000000000",
+        "0xd02D27c7B19c2C40eFaCA8a0a1Ede626d58620FA": "1000000000000000000"
+      }
+    },
+    {
+      "label": "Holder files out-of-scope evidence",
+      "hash": "0xec0dbcfe0778d2349f61b58c6e70a39219c8f54d758381fd41a210807da8f5d1",
+      "method": "file_claim",
+      "args": [
+        "p1",
+        "1792022400",
+        "500000000000000000",
+        "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/out-of-scope-report.txt",
+        "sha256:e68452e83c1a1b8f899043314b702399301c50660c0ddca9a239cd98d5da8ccf"
+      ],
+      "value": "0",
+      "sender": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+      "status": "FINALIZED",
+      "beforeState": {
+        "policies": [
+          {
+            "id": "p1",
+            "insurer": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+            "holder": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "coverage": "Steward review: liquid damage",
+            "wording": "This policy covers accidental liquid damage to equipment owned by the insured. A repair centre inspection and estimate must support the claim. Software subscriptions and voluntary cancellations are excluded.",
+            "conditions": [
+              "The incident occurred inside the covered period.",
+              "The document describes accidental liquid damage to insured equipment.",
+              "An authorised repair inspection confirms physical damage.",
+              "A repair estimate supports the claimed amount of 0.35 GEN."
+            ],
+            "limitWei": "1000000000000000000",
+            "deductibleWei": "100000000000000000",
+            "startsAt": "1790812800",
+            "endsAt": "1792077120",
+            "poolWei": "1000000000000000000",
+            "paidWei": "0",
+            "withdrawnWei": "0",
+            "reservedWei": "250000000000000000",
+            "recoverableWei": "0",
+            "reportingEndsAt": "1792681920",
+            "claimCount": 1,
+            "status": "ACTIVE",
+            "policyVersion": "claimline-policy-v2"
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "350000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/equipment-damage-report.txt",
+            "evidenceDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "status": "FILED",
+            "outcome": "NONE",
+            "payoutBand": 0,
+            "confidenceBand": "NONE",
+            "reason": "",
+            "conditions": [],
+            "inconsistencies": [],
+            "contentDigest": "",
+            "payoutWei": "0",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 0,
+            "decisionRevision": 0,
+            "appeals": 0,
+            "decisionIsCurrent": false
+          }
+        ],
+        "policyVersion": "claimline-policy-v2",
+        "policyCount": 1,
+        "claimCount": 1
+      },
+      "beforeBalances": {
+        "0xc85B35932Bb3b5bAfc5d3C7770Fc2e4f0Bc71fd3": "1000000000000000000",
+        "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71": "9600000000000004999",
+        "0x3654661080bC75Fd1674d5D81728Af424ff41622": "1000000000000000000",
+        "0xd02D27c7B19c2C40eFaCA8a0a1Ede626d58620FA": "1000000000000000000"
+      },
+      "execution": "SUCCESS",
+      "afterState": {
+        "policies": [
+          {
+            "id": "p1",
+            "insurer": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+            "holder": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "coverage": "Steward review: liquid damage",
+            "wording": "This policy covers accidental liquid damage to equipment owned by the insured. A repair centre inspection and estimate must support the claim. Software subscriptions and voluntary cancellations are excluded.",
+            "conditions": [
+              "The incident occurred inside the covered period.",
+              "The document describes accidental liquid damage to insured equipment.",
+              "An authorised repair inspection confirms physical damage.",
+              "A repair estimate supports the claimed amount of 0.35 GEN."
+            ],
+            "limitWei": "1000000000000000000",
+            "deductibleWei": "100000000000000000",
+            "startsAt": "1790812800",
+            "endsAt": "1792077120",
+            "poolWei": "1000000000000000000",
+            "paidWei": "0",
+            "withdrawnWei": "0",
+            "reservedWei": "650000000000000000",
+            "recoverableWei": "0",
+            "reportingEndsAt": "1792681920",
+            "claimCount": 2,
+            "status": "ACTIVE",
+            "policyVersion": "claimline-policy-v2"
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "350000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/equipment-damage-report.txt",
+            "evidenceDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "status": "FILED",
+            "outcome": "NONE",
+            "payoutBand": 0,
+            "confidenceBand": "NONE",
+            "reason": "",
+            "conditions": [],
+            "inconsistencies": [],
+            "contentDigest": "",
+            "payoutWei": "0",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 0,
+            "decisionRevision": 0,
+            "appeals": 0,
+            "decisionIsCurrent": false
+          },
+          {
+            "id": "c2",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "500000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/out-of-scope-report.txt",
+            "evidenceDigest": "sha256:e68452e83c1a1b8f899043314b702399301c50660c0ddca9a239cd98d5da8ccf",
+            "status": "FILED",
+            "outcome": "NONE",
+            "payoutBand": 0,
+            "confidenceBand": "NONE",
+            "reason": "",
+            "conditions": [],
+            "inconsistencies": [],
+            "contentDigest": "",
+            "payoutWei": "0",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 0,
+            "decisionRevision": 0,
+            "appeals": 0,
+            "decisionIsCurrent": false
+          }
+        ],
+        "policyVersion": "claimline-policy-v2",
+        "policyCount": 1,
+        "claimCount": 2
+      },
+      "afterBalances": {
+        "0xc85B35932Bb3b5bAfc5d3C7770Fc2e4f0Bc71fd3": "1000000000000000000",
+        "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71": "9600000000000004999",
+        "0x3654661080bC75Fd1674d5D81728Af424ff41622": "1000000000000000000",
+        "0xd02D27c7B19c2C40eFaCA8a0a1Ede626d58620FA": "1000000000000000000"
+      }
+    },
+    {
+      "label": "Cannot recover an active policy pool",
+      "hash": "0x0ad5ca5ef6c3cc3c7d5c1e29711686e1d175126140baa1c32234a5dc8ec728cc",
+      "method": "withdraw_unused",
+      "args": [
+        "p1",
+        "1"
+      ],
+      "value": "0",
+      "sender": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+      "status": "FINALIZED",
+      "beforeState": {
+        "policies": [
+          {
+            "id": "p1",
+            "insurer": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+            "holder": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "coverage": "Steward review: liquid damage",
+            "wording": "This policy covers accidental liquid damage to equipment owned by the insured. A repair centre inspection and estimate must support the claim. Software subscriptions and voluntary cancellations are excluded.",
+            "conditions": [
+              "The incident occurred inside the covered period.",
+              "The document describes accidental liquid damage to insured equipment.",
+              "An authorised repair inspection confirms physical damage.",
+              "A repair estimate supports the claimed amount of 0.35 GEN."
+            ],
+            "limitWei": "1000000000000000000",
+            "deductibleWei": "100000000000000000",
+            "startsAt": "1790812800",
+            "endsAt": "1792077120",
+            "poolWei": "1000000000000000000",
+            "paidWei": "0",
+            "withdrawnWei": "0",
+            "reservedWei": "650000000000000000",
+            "recoverableWei": "0",
+            "reportingEndsAt": "1792681920",
+            "claimCount": 2,
+            "status": "ACTIVE",
+            "policyVersion": "claimline-policy-v2"
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "350000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/equipment-damage-report.txt",
+            "evidenceDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "status": "FILED",
+            "outcome": "NONE",
+            "payoutBand": 0,
+            "confidenceBand": "NONE",
+            "reason": "",
+            "conditions": [],
+            "inconsistencies": [],
+            "contentDigest": "",
+            "payoutWei": "0",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 0,
+            "decisionRevision": 0,
+            "appeals": 0,
+            "decisionIsCurrent": false
+          },
+          {
+            "id": "c2",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "500000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/out-of-scope-report.txt",
+            "evidenceDigest": "sha256:e68452e83c1a1b8f899043314b702399301c50660c0ddca9a239cd98d5da8ccf",
+            "status": "FILED",
+            "outcome": "NONE",
+            "payoutBand": 0,
+            "confidenceBand": "NONE",
+            "reason": "",
+            "conditions": [],
+            "inconsistencies": [],
+            "contentDigest": "",
+            "payoutWei": "0",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 0,
+            "decisionRevision": 0,
+            "appeals": 0,
+            "decisionIsCurrent": false
+          }
+        ],
+        "policyVersion": "claimline-policy-v2",
+        "policyCount": 1,
+        "claimCount": 2
+      },
+      "beforeBalances": {
+        "0xc85B35932Bb3b5bAfc5d3C7770Fc2e4f0Bc71fd3": "1000000000000000000",
+        "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71": "9600000000000004999",
+        "0x3654661080bC75Fd1674d5D81728Af424ff41622": "1000000000000000000",
+        "0xd02D27c7B19c2C40eFaCA8a0a1Ede626d58620FA": "1000000000000000000"
+      },
+      "execution": "ERROR",
+      "afterState": {
+        "policies": [
+          {
+            "id": "p1",
+            "insurer": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+            "holder": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "coverage": "Steward review: liquid damage",
+            "wording": "This policy covers accidental liquid damage to equipment owned by the insured. A repair centre inspection and estimate must support the claim. Software subscriptions and voluntary cancellations are excluded.",
+            "conditions": [
+              "The incident occurred inside the covered period.",
+              "The document describes accidental liquid damage to insured equipment.",
+              "An authorised repair inspection confirms physical damage.",
+              "A repair estimate supports the claimed amount of 0.35 GEN."
+            ],
+            "limitWei": "1000000000000000000",
+            "deductibleWei": "100000000000000000",
+            "startsAt": "1790812800",
+            "endsAt": "1792077120",
+            "poolWei": "1000000000000000000",
+            "paidWei": "0",
+            "withdrawnWei": "0",
+            "reservedWei": "650000000000000000",
+            "recoverableWei": "0",
+            "reportingEndsAt": "1792681920",
+            "claimCount": 2,
+            "status": "ACTIVE",
+            "policyVersion": "claimline-policy-v2"
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "350000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/equipment-damage-report.txt",
+            "evidenceDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "status": "FILED",
+            "outcome": "NONE",
+            "payoutBand": 0,
+            "confidenceBand": "NONE",
+            "reason": "",
+            "conditions": [],
+            "inconsistencies": [],
+            "contentDigest": "",
+            "payoutWei": "0",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 0,
+            "decisionRevision": 0,
+            "appeals": 0,
+            "decisionIsCurrent": false
+          },
+          {
+            "id": "c2",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "500000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/out-of-scope-report.txt",
+            "evidenceDigest": "sha256:e68452e83c1a1b8f899043314b702399301c50660c0ddca9a239cd98d5da8ccf",
+            "status": "FILED",
+            "outcome": "NONE",
+            "payoutBand": 0,
+            "confidenceBand": "NONE",
+            "reason": "",
+            "conditions": [],
+            "inconsistencies": [],
+            "contentDigest": "",
+            "payoutWei": "0",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 0,
+            "decisionRevision": 0,
+            "appeals": 0,
+            "decisionIsCurrent": false
+          }
+        ],
+        "policyVersion": "claimline-policy-v2",
+        "policyCount": 1,
+        "claimCount": 2
+      },
+      "afterBalances": {
+        "0xc85B35932Bb3b5bAfc5d3C7770Fc2e4f0Bc71fd3": "1000000000000000000",
+        "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71": "9600000000000004999",
+        "0x3654661080bC75Fd1674d5D81728Af424ff41622": "1000000000000000000",
+        "0xd02D27c7B19c2C40eFaCA8a0a1Ede626d58620FA": "1000000000000000000"
+      },
+      "rejection": {
+        "raw": "AUNsb3NlIHRoZSBwb2xpY3kgYmVmb3JlIHdpdGhkcmF3aW5nIHVudXNlZCBmdW5kcw==",
+        "status": "rollback",
+        "payload": "Close the policy before withdrawing unused funds"
+      },
+      "stateAndBalancesUnchanged": true
+    },
+    {
+      "label": "Cannot close before the reporting deadline",
+      "hash": "0x169f90c398334cfc0a99bb83e6b8db5847ab7f847d66552d597f1f387ca87e22",
+      "method": "close_policy",
+      "args": [
+        "p1"
+      ],
+      "value": "0",
+      "sender": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+      "status": "FINALIZED",
+      "beforeState": {
+        "policies": [
+          {
+            "id": "p1",
+            "insurer": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+            "holder": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "coverage": "Steward review: liquid damage",
+            "wording": "This policy covers accidental liquid damage to equipment owned by the insured. A repair centre inspection and estimate must support the claim. Software subscriptions and voluntary cancellations are excluded.",
+            "conditions": [
+              "The incident occurred inside the covered period.",
+              "The document describes accidental liquid damage to insured equipment.",
+              "An authorised repair inspection confirms physical damage.",
+              "A repair estimate supports the claimed amount of 0.35 GEN."
+            ],
+            "limitWei": "1000000000000000000",
+            "deductibleWei": "100000000000000000",
+            "startsAt": "1790812800",
+            "endsAt": "1792077120",
+            "poolWei": "1000000000000000000",
+            "paidWei": "0",
+            "withdrawnWei": "0",
+            "reservedWei": "650000000000000000",
+            "recoverableWei": "0",
+            "reportingEndsAt": "1792681920",
+            "claimCount": 2,
+            "status": "ACTIVE",
+            "policyVersion": "claimline-policy-v2"
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "350000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/equipment-damage-report.txt",
+            "evidenceDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "status": "FILED",
+            "outcome": "NONE",
+            "payoutBand": 0,
+            "confidenceBand": "NONE",
+            "reason": "",
+            "conditions": [],
+            "inconsistencies": [],
+            "contentDigest": "",
+            "payoutWei": "0",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 0,
+            "decisionRevision": 0,
+            "appeals": 0,
+            "decisionIsCurrent": false
+          },
+          {
+            "id": "c2",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "500000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/out-of-scope-report.txt",
+            "evidenceDigest": "sha256:e68452e83c1a1b8f899043314b702399301c50660c0ddca9a239cd98d5da8ccf",
+            "status": "FILED",
+            "outcome": "NONE",
+            "payoutBand": 0,
+            "confidenceBand": "NONE",
+            "reason": "",
+            "conditions": [],
+            "inconsistencies": [],
+            "contentDigest": "",
+            "payoutWei": "0",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 0,
+            "decisionRevision": 0,
+            "appeals": 0,
+            "decisionIsCurrent": false
+          }
+        ],
+        "policyVersion": "claimline-policy-v2",
+        "policyCount": 1,
+        "claimCount": 2
+      },
+      "beforeBalances": {
+        "0xc85B35932Bb3b5bAfc5d3C7770Fc2e4f0Bc71fd3": "1000000000000000000",
+        "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71": "9600000000000004999",
+        "0x3654661080bC75Fd1674d5D81728Af424ff41622": "1000000000000000000",
+        "0xd02D27c7B19c2C40eFaCA8a0a1Ede626d58620FA": "1000000000000000000"
+      },
+      "execution": "ERROR",
+      "afterState": {
+        "policies": [
+          {
+            "id": "p1",
+            "insurer": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+            "holder": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "coverage": "Steward review: liquid damage",
+            "wording": "This policy covers accidental liquid damage to equipment owned by the insured. A repair centre inspection and estimate must support the claim. Software subscriptions and voluntary cancellations are excluded.",
+            "conditions": [
+              "The incident occurred inside the covered period.",
+              "The document describes accidental liquid damage to insured equipment.",
+              "An authorised repair inspection confirms physical damage.",
+              "A repair estimate supports the claimed amount of 0.35 GEN."
+            ],
+            "limitWei": "1000000000000000000",
+            "deductibleWei": "100000000000000000",
+            "startsAt": "1790812800",
+            "endsAt": "1792077120",
+            "poolWei": "1000000000000000000",
+            "paidWei": "0",
+            "withdrawnWei": "0",
+            "reservedWei": "650000000000000000",
+            "recoverableWei": "0",
+            "reportingEndsAt": "1792681920",
+            "claimCount": 2,
+            "status": "ACTIVE",
+            "policyVersion": "claimline-policy-v2"
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "350000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/equipment-damage-report.txt",
+            "evidenceDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "status": "FILED",
+            "outcome": "NONE",
+            "payoutBand": 0,
+            "confidenceBand": "NONE",
+            "reason": "",
+            "conditions": [],
+            "inconsistencies": [],
+            "contentDigest": "",
+            "payoutWei": "0",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 0,
+            "decisionRevision": 0,
+            "appeals": 0,
+            "decisionIsCurrent": false
+          },
+          {
+            "id": "c2",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "500000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/out-of-scope-report.txt",
+            "evidenceDigest": "sha256:e68452e83c1a1b8f899043314b702399301c50660c0ddca9a239cd98d5da8ccf",
+            "status": "FILED",
+            "outcome": "NONE",
+            "payoutBand": 0,
+            "confidenceBand": "NONE",
+            "reason": "",
+            "conditions": [],
+            "inconsistencies": [],
+            "contentDigest": "",
+            "payoutWei": "0",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 0,
+            "decisionRevision": 0,
+            "appeals": 0,
+            "decisionIsCurrent": false
+          }
+        ],
+        "policyVersion": "claimline-policy-v2",
+        "policyCount": 1,
+        "claimCount": 2
+      },
+      "afterBalances": {
+        "0xc85B35932Bb3b5bAfc5d3C7770Fc2e4f0Bc71fd3": "1000000000000000000",
+        "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71": "9600000000000004999",
+        "0x3654661080bC75Fd1674d5D81728Af424ff41622": "1000000000000000000",
+        "0xd02D27c7B19c2C40eFaCA8a0a1Ede626d58620FA": "1000000000000000000"
+      },
+      "rejection": {
+        "raw": "AVRoZSBwb2xpY3kgcmVwb3J0aW5nIHBlcmlvZCBtdXN0IGVuZCBiZWZvcmUgY2xvc3VyZQ==",
+        "status": "rollback",
+        "payload": "The policy reporting period must end before closure"
+      },
+      "stateAndBalancesUnchanged": true
+    },
+    {
+      "label": "Cannot settle an unadjudicated claim",
+      "hash": "0x57304ad03de4cd418b7b45b046f4c2ff5bc9c3dc0fee6c15c0aa182007b6fbfb",
+      "method": "settle",
+      "args": [
+        "c1"
+      ],
+      "value": "0",
+      "sender": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+      "status": "FINALIZED",
+      "beforeState": {
+        "policies": [
+          {
+            "id": "p1",
+            "insurer": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+            "holder": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "coverage": "Steward review: liquid damage",
+            "wording": "This policy covers accidental liquid damage to equipment owned by the insured. A repair centre inspection and estimate must support the claim. Software subscriptions and voluntary cancellations are excluded.",
+            "conditions": [
+              "The incident occurred inside the covered period.",
+              "The document describes accidental liquid damage to insured equipment.",
+              "An authorised repair inspection confirms physical damage.",
+              "A repair estimate supports the claimed amount of 0.35 GEN."
+            ],
+            "limitWei": "1000000000000000000",
+            "deductibleWei": "100000000000000000",
+            "startsAt": "1790812800",
+            "endsAt": "1792077120",
+            "poolWei": "1000000000000000000",
+            "paidWei": "0",
+            "withdrawnWei": "0",
+            "reservedWei": "650000000000000000",
+            "recoverableWei": "0",
+            "reportingEndsAt": "1792681920",
+            "claimCount": 2,
+            "status": "ACTIVE",
+            "policyVersion": "claimline-policy-v2"
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "350000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/equipment-damage-report.txt",
+            "evidenceDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "status": "FILED",
+            "outcome": "NONE",
+            "payoutBand": 0,
+            "confidenceBand": "NONE",
+            "reason": "",
+            "conditions": [],
+            "inconsistencies": [],
+            "contentDigest": "",
+            "payoutWei": "0",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 0,
+            "decisionRevision": 0,
+            "appeals": 0,
+            "decisionIsCurrent": false
+          },
+          {
+            "id": "c2",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "500000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/out-of-scope-report.txt",
+            "evidenceDigest": "sha256:e68452e83c1a1b8f899043314b702399301c50660c0ddca9a239cd98d5da8ccf",
+            "status": "FILED",
+            "outcome": "NONE",
+            "payoutBand": 0,
+            "confidenceBand": "NONE",
+            "reason": "",
+            "conditions": [],
+            "inconsistencies": [],
+            "contentDigest": "",
+            "payoutWei": "0",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 0,
+            "decisionRevision": 0,
+            "appeals": 0,
+            "decisionIsCurrent": false
+          }
+        ],
+        "policyVersion": "claimline-policy-v2",
+        "policyCount": 1,
+        "claimCount": 2
+      },
+      "beforeBalances": {
+        "0xc85B35932Bb3b5bAfc5d3C7770Fc2e4f0Bc71fd3": "1000000000000000000",
+        "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71": "9600000000000004999",
+        "0x3654661080bC75Fd1674d5D81728Af424ff41622": "1000000000000000000",
+        "0xd02D27c7B19c2C40eFaCA8a0a1Ede626d58620FA": "1000000000000000000"
+      },
+      "execution": "ERROR",
+      "afterState": {
+        "policies": [
+          {
+            "id": "p1",
+            "insurer": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+            "holder": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "coverage": "Steward review: liquid damage",
+            "wording": "This policy covers accidental liquid damage to equipment owned by the insured. A repair centre inspection and estimate must support the claim. Software subscriptions and voluntary cancellations are excluded.",
+            "conditions": [
+              "The incident occurred inside the covered period.",
+              "The document describes accidental liquid damage to insured equipment.",
+              "An authorised repair inspection confirms physical damage.",
+              "A repair estimate supports the claimed amount of 0.35 GEN."
+            ],
+            "limitWei": "1000000000000000000",
+            "deductibleWei": "100000000000000000",
+            "startsAt": "1790812800",
+            "endsAt": "1792077120",
+            "poolWei": "1000000000000000000",
+            "paidWei": "0",
+            "withdrawnWei": "0",
+            "reservedWei": "650000000000000000",
+            "recoverableWei": "0",
+            "reportingEndsAt": "1792681920",
+            "claimCount": 2,
+            "status": "ACTIVE",
+            "policyVersion": "claimline-policy-v2"
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "350000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/equipment-damage-report.txt",
+            "evidenceDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "status": "FILED",
+            "outcome": "NONE",
+            "payoutBand": 0,
+            "confidenceBand": "NONE",
+            "reason": "",
+            "conditions": [],
+            "inconsistencies": [],
+            "contentDigest": "",
+            "payoutWei": "0",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 0,
+            "decisionRevision": 0,
+            "appeals": 0,
+            "decisionIsCurrent": false
+          },
+          {
+            "id": "c2",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "500000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/out-of-scope-report.txt",
+            "evidenceDigest": "sha256:e68452e83c1a1b8f899043314b702399301c50660c0ddca9a239cd98d5da8ccf",
+            "status": "FILED",
+            "outcome": "NONE",
+            "payoutBand": 0,
+            "confidenceBand": "NONE",
+            "reason": "",
+            "conditions": [],
+            "inconsistencies": [],
+            "contentDigest": "",
+            "payoutWei": "0",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 0,
+            "decisionRevision": 0,
+            "appeals": 0,
+            "decisionIsCurrent": false
+          }
+        ],
+        "policyVersion": "claimline-policy-v2",
+        "policyCount": 1,
+        "claimCount": 2
+      },
+      "afterBalances": {
+        "0xc85B35932Bb3b5bAfc5d3C7770Fc2e4f0Bc71fd3": "1000000000000000000",
+        "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71": "9600000000000004999",
+        "0x3654661080bC75Fd1674d5D81728Af424ff41622": "1000000000000000000",
+        "0xd02D27c7B19c2C40eFaCA8a0a1Ede626d58620FA": "1000000000000000000"
+      },
+      "rejection": {
+        "raw": "AU9ubHkgYW4gYXBwcm92ZWQgY2xhaW0gY2FuIGJlIHNldHRsZWQ=",
+        "status": "rollback",
+        "payload": "Only an approved claim can be settled"
+      },
+      "stateAndBalancesUnchanged": true
+    },
+    {
+      "label": "Browser requests real committee decision and waits for FINALIZED",
+      "hash": "0x387b52bff80e22a250c0832bf48d2c7aa7c196bf3eb85c06bad913ea73bd3be5",
+      "method": "adjudicate",
+      "sender": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+      "status": "FINALIZED",
+      "execution": "SUCCESS",
+      "beforeState": {
+        "policies": [
+          {
+            "id": "p1",
+            "insurer": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+            "holder": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "coverage": "Steward review: liquid damage",
+            "wording": "This policy covers accidental liquid damage to equipment owned by the insured. A repair centre inspection and estimate must support the claim. Software subscriptions and voluntary cancellations are excluded.",
+            "conditions": [
+              "The incident occurred inside the covered period.",
+              "The document describes accidental liquid damage to insured equipment.",
+              "An authorised repair inspection confirms physical damage.",
+              "A repair estimate supports the claimed amount of 0.35 GEN."
+            ],
+            "limitWei": "1000000000000000000",
+            "deductibleWei": "100000000000000000",
+            "startsAt": "1790812800",
+            "endsAt": "1792077120",
+            "poolWei": "1000000000000000000",
+            "paidWei": "0",
+            "withdrawnWei": "0",
+            "reservedWei": "650000000000000000",
+            "recoverableWei": "0",
+            "reportingEndsAt": "1792681920",
+            "claimCount": 2,
+            "status": "ACTIVE",
+            "policyVersion": "claimline-policy-v2"
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "350000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/equipment-damage-report.txt",
+            "evidenceDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "status": "FILED",
+            "outcome": "NONE",
+            "payoutBand": 0,
+            "confidenceBand": "NONE",
+            "reason": "",
+            "conditions": [],
+            "inconsistencies": [],
+            "contentDigest": "",
+            "payoutWei": "0",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 0,
+            "decisionRevision": 0,
+            "appeals": 0,
+            "decisionIsCurrent": false
+          },
+          {
+            "id": "c2",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "500000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/out-of-scope-report.txt",
+            "evidenceDigest": "sha256:e68452e83c1a1b8f899043314b702399301c50660c0ddca9a239cd98d5da8ccf",
+            "status": "FILED",
+            "outcome": "NONE",
+            "payoutBand": 0,
+            "confidenceBand": "NONE",
+            "reason": "",
+            "conditions": [],
+            "inconsistencies": [],
+            "contentDigest": "",
+            "payoutWei": "0",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 0,
+            "decisionRevision": 0,
+            "appeals": 0,
+            "decisionIsCurrent": false
+          }
+        ],
+        "policyVersion": "claimline-policy-v2",
+        "policyCount": 1,
+        "claimCount": 2
+      },
+      "afterState": {
+        "policies": [
+          {
+            "id": "p1",
+            "insurer": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+            "holder": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "coverage": "Steward review: liquid damage",
+            "wording": "This policy covers accidental liquid damage to equipment owned by the insured. A repair centre inspection and estimate must support the claim. Software subscriptions and voluntary cancellations are excluded.",
+            "conditions": [
+              "The incident occurred inside the covered period.",
+              "The document describes accidental liquid damage to insured equipment.",
+              "An authorised repair inspection confirms physical damage.",
+              "A repair estimate supports the claimed amount of 0.35 GEN."
+            ],
+            "limitWei": "1000000000000000000",
+            "deductibleWei": "100000000000000000",
+            "startsAt": "1790812800",
+            "endsAt": "1792077120",
+            "poolWei": "1000000000000000000",
+            "paidWei": "0",
+            "withdrawnWei": "0",
+            "reservedWei": "650000000000000000",
+            "recoverableWei": "0",
+            "reportingEndsAt": "1792681920",
+            "claimCount": 2,
+            "status": "ACTIVE",
+            "policyVersion": "claimline-policy-v2"
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "350000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/equipment-damage-report.txt",
+            "evidenceDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "status": "APPROVED",
+            "outcome": "APPROVED",
+            "payoutBand": 100,
+            "confidenceBand": "HIGH",
+            "reason": "All four conditions are satisfied by the verified document. The incident date falls inside the policy period, the cause is accidental liquid damage to owned equipment, the authorised repair centre confirms physical damage, and the estimate exactly matches the 0.35 GEN claim.",
+            "conditions": [
+              {
+                "condition": "The incident occurred inside the covered period.",
+                "passed": true,
+                "reason": "Claim incident date 1792022400 and document date 15 October 2026 both fall between 1790812800 and 1792077120."
+              },
+              {
+                "condition": "The document describes accidental liquid damage to insured equipment.",
+                "passed": true,
+                "reason": "Sealed water bottle leak during travel caused laptop failure; declaration states equipment is owned by the insured."
+              },
+              {
+                "condition": "An authorised repair inspection confirms physical damage.",
+                "passed": true,
+                "reason": "Claimline Test Repair Centre inspection found liquid damage to main board and keyboard."
+              },
+              {
+                "condition": "A repair estimate supports the claimed amount of 0.35 GEN.",
+                "passed": true,
+                "reason": "Repair estimate totals exactly 0.35 GEN (0.25 parts + 0.10 labour)."
+              }
+            ],
+            "inconsistencies": [],
+            "contentDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "payoutWei": "250000000000000000",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 1,
+            "decisionRevision": 1,
+            "appeals": 0,
+            "decisionIsCurrent": true
+          },
+          {
+            "id": "c2",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "500000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/out-of-scope-report.txt",
+            "evidenceDigest": "sha256:e68452e83c1a1b8f899043314b702399301c50660c0ddca9a239cd98d5da8ccf",
+            "status": "FILED",
+            "outcome": "NONE",
+            "payoutBand": 0,
+            "confidenceBand": "NONE",
+            "reason": "",
+            "conditions": [],
+            "inconsistencies": [],
+            "contentDigest": "",
+            "payoutWei": "0",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 0,
+            "decisionRevision": 0,
+            "appeals": 0,
+            "decisionIsCurrent": false
+          }
+        ],
+        "policyVersion": "claimline-policy-v2",
+        "policyCount": 1,
+        "claimCount": 2
+      },
+      "actualFrontendWrite": true,
+      "browserFinalizedEvent": {
+        "hash": "0x387b52bff80e22a250c0832bf48d2c7aa7c196bf3eb85c06bad913ea73bd3be5",
+        "functionName": "adjudicate"
+      },
+      "beforeBalances": {
+        "0xc85B35932Bb3b5bAfc5d3C7770Fc2e4f0Bc71fd3": "1000000000000000000",
+        "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71": "9600000000000004999",
+        "0x3654661080bC75Fd1674d5D81728Af424ff41622": "1000000000000000000",
+        "0xd02D27c7B19c2C40eFaCA8a0a1Ede626d58620FA": "1000000000000000000"
+      },
+      "afterBalances": {
+        "0xc85B35932Bb3b5bAfc5d3C7770Fc2e4f0Bc71fd3": "1000000000000000000",
+        "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71": "9600000000000004999",
+        "0x3654661080bC75Fd1674d5D81728Af424ff41622": "1000000000000000000",
+        "0xd02D27c7B19c2C40eFaCA8a0a1Ede626d58620FA": "1000000000000000000"
+      }
+    },
+    {
+      "label": "Unrelated wallet cannot settle approved claim",
+      "hash": "0x5a91d0432f9afb47a9cf03f103993d4bfc1527eb99df7ab8c39994e134408631",
+      "method": "settle",
+      "args": [
+        "c1"
+      ],
+      "value": "0",
+      "sender": "0xd02D27c7B19c2C40eFaCA8a0a1Ede626d58620FA",
+      "status": "FINALIZED",
+      "beforeState": {
+        "policies": [
+          {
+            "id": "p1",
+            "insurer": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+            "holder": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "coverage": "Steward review: liquid damage",
+            "wording": "This policy covers accidental liquid damage to equipment owned by the insured. A repair centre inspection and estimate must support the claim. Software subscriptions and voluntary cancellations are excluded.",
+            "conditions": [
+              "The incident occurred inside the covered period.",
+              "The document describes accidental liquid damage to insured equipment.",
+              "An authorised repair inspection confirms physical damage.",
+              "A repair estimate supports the claimed amount of 0.35 GEN."
+            ],
+            "limitWei": "1000000000000000000",
+            "deductibleWei": "100000000000000000",
+            "startsAt": "1790812800",
+            "endsAt": "1792077120",
+            "poolWei": "1000000000000000000",
+            "paidWei": "0",
+            "withdrawnWei": "0",
+            "reservedWei": "650000000000000000",
+            "recoverableWei": "0",
+            "reportingEndsAt": "1792681920",
+            "claimCount": 2,
+            "status": "ACTIVE",
+            "policyVersion": "claimline-policy-v2"
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "350000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/equipment-damage-report.txt",
+            "evidenceDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "status": "APPROVED",
+            "outcome": "APPROVED",
+            "payoutBand": 100,
+            "confidenceBand": "HIGH",
+            "reason": "All four conditions are satisfied by the verified document. The incident date falls inside the policy period, the cause is accidental liquid damage to owned equipment, the authorised repair centre confirms physical damage, and the estimate exactly matches the 0.35 GEN claim.",
+            "conditions": [
+              {
+                "condition": "The incident occurred inside the covered period.",
+                "passed": true,
+                "reason": "Claim incident date 1792022400 and document date 15 October 2026 both fall between 1790812800 and 1792077120."
+              },
+              {
+                "condition": "The document describes accidental liquid damage to insured equipment.",
+                "passed": true,
+                "reason": "Sealed water bottle leak during travel caused laptop failure; declaration states equipment is owned by the insured."
+              },
+              {
+                "condition": "An authorised repair inspection confirms physical damage.",
+                "passed": true,
+                "reason": "Claimline Test Repair Centre inspection found liquid damage to main board and keyboard."
+              },
+              {
+                "condition": "A repair estimate supports the claimed amount of 0.35 GEN.",
+                "passed": true,
+                "reason": "Repair estimate totals exactly 0.35 GEN (0.25 parts + 0.10 labour)."
+              }
+            ],
+            "inconsistencies": [],
+            "contentDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "payoutWei": "250000000000000000",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 1,
+            "decisionRevision": 1,
+            "appeals": 0,
+            "decisionIsCurrent": true
+          },
+          {
+            "id": "c2",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "500000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/out-of-scope-report.txt",
+            "evidenceDigest": "sha256:e68452e83c1a1b8f899043314b702399301c50660c0ddca9a239cd98d5da8ccf",
+            "status": "FILED",
+            "outcome": "NONE",
+            "payoutBand": 0,
+            "confidenceBand": "NONE",
+            "reason": "",
+            "conditions": [],
+            "inconsistencies": [],
+            "contentDigest": "",
+            "payoutWei": "0",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 0,
+            "decisionRevision": 0,
+            "appeals": 0,
+            "decisionIsCurrent": false
+          }
+        ],
+        "policyVersion": "claimline-policy-v2",
+        "policyCount": 1,
+        "claimCount": 2
+      },
+      "beforeBalances": {
+        "0xc85B35932Bb3b5bAfc5d3C7770Fc2e4f0Bc71fd3": "1000000000000000000",
+        "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71": "9600000000000004999",
+        "0x3654661080bC75Fd1674d5D81728Af424ff41622": "1000000000000000000",
+        "0xd02D27c7B19c2C40eFaCA8a0a1Ede626d58620FA": "1000000000000000000"
+      },
+      "execution": "ERROR",
+      "afterState": {
+        "policies": [
+          {
+            "id": "p1",
+            "insurer": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+            "holder": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "coverage": "Steward review: liquid damage",
+            "wording": "This policy covers accidental liquid damage to equipment owned by the insured. A repair centre inspection and estimate must support the claim. Software subscriptions and voluntary cancellations are excluded.",
+            "conditions": [
+              "The incident occurred inside the covered period.",
+              "The document describes accidental liquid damage to insured equipment.",
+              "An authorised repair inspection confirms physical damage.",
+              "A repair estimate supports the claimed amount of 0.35 GEN."
+            ],
+            "limitWei": "1000000000000000000",
+            "deductibleWei": "100000000000000000",
+            "startsAt": "1790812800",
+            "endsAt": "1792077120",
+            "poolWei": "1000000000000000000",
+            "paidWei": "0",
+            "withdrawnWei": "0",
+            "reservedWei": "650000000000000000",
+            "recoverableWei": "0",
+            "reportingEndsAt": "1792681920",
+            "claimCount": 2,
+            "status": "ACTIVE",
+            "policyVersion": "claimline-policy-v2"
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "350000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/equipment-damage-report.txt",
+            "evidenceDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "status": "APPROVED",
+            "outcome": "APPROVED",
+            "payoutBand": 100,
+            "confidenceBand": "HIGH",
+            "reason": "All four conditions are satisfied by the verified document. The incident date falls inside the policy period, the cause is accidental liquid damage to owned equipment, the authorised repair centre confirms physical damage, and the estimate exactly matches the 0.35 GEN claim.",
+            "conditions": [
+              {
+                "condition": "The incident occurred inside the covered period.",
+                "passed": true,
+                "reason": "Claim incident date 1792022400 and document date 15 October 2026 both fall between 1790812800 and 1792077120."
+              },
+              {
+                "condition": "The document describes accidental liquid damage to insured equipment.",
+                "passed": true,
+                "reason": "Sealed water bottle leak during travel caused laptop failure; declaration states equipment is owned by the insured."
+              },
+              {
+                "condition": "An authorised repair inspection confirms physical damage.",
+                "passed": true,
+                "reason": "Claimline Test Repair Centre inspection found liquid damage to main board and keyboard."
+              },
+              {
+                "condition": "A repair estimate supports the claimed amount of 0.35 GEN.",
+                "passed": true,
+                "reason": "Repair estimate totals exactly 0.35 GEN (0.25 parts + 0.10 labour)."
+              }
+            ],
+            "inconsistencies": [],
+            "contentDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "payoutWei": "250000000000000000",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 1,
+            "decisionRevision": 1,
+            "appeals": 0,
+            "decisionIsCurrent": true
+          },
+          {
+            "id": "c2",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "500000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/out-of-scope-report.txt",
+            "evidenceDigest": "sha256:e68452e83c1a1b8f899043314b702399301c50660c0ddca9a239cd98d5da8ccf",
+            "status": "FILED",
+            "outcome": "NONE",
+            "payoutBand": 0,
+            "confidenceBand": "NONE",
+            "reason": "",
+            "conditions": [],
+            "inconsistencies": [],
+            "contentDigest": "",
+            "payoutWei": "0",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 0,
+            "decisionRevision": 0,
+            "appeals": 0,
+            "decisionIsCurrent": false
+          }
+        ],
+        "policyVersion": "claimline-policy-v2",
+        "policyCount": 1,
+        "claimCount": 2
+      },
+      "afterBalances": {
+        "0xc85B35932Bb3b5bAfc5d3C7770Fc2e4f0Bc71fd3": "1000000000000000000",
+        "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71": "9600000000000004999",
+        "0x3654661080bC75Fd1674d5D81728Af424ff41622": "1000000000000000000",
+        "0xd02D27c7B19c2C40eFaCA8a0a1Ede626d58620FA": "1000000000000000000"
+      },
+      "rejection": {
+        "raw": "AU9ubHkgdGhlIGluc3VyZXIgY2FuIHNldHRsZSB0aGlzIGNsYWlt",
+        "status": "rollback",
+        "payload": "Only the insurer can settle this claim"
+      },
+      "stateAndBalancesUnchanged": true
+    },
+    {
+      "label": "Holder cannot redirect or authorize settlement",
+      "hash": "0xc48fbdfddde403b3c445ecc93daabbcf888b4c87f01749e373b752d2f541896d",
+      "method": "settle",
+      "args": [
+        "c1"
+      ],
+      "value": "0",
+      "sender": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+      "status": "FINALIZED",
+      "beforeState": {
+        "policies": [
+          {
+            "id": "p1",
+            "insurer": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+            "holder": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "coverage": "Steward review: liquid damage",
+            "wording": "This policy covers accidental liquid damage to equipment owned by the insured. A repair centre inspection and estimate must support the claim. Software subscriptions and voluntary cancellations are excluded.",
+            "conditions": [
+              "The incident occurred inside the covered period.",
+              "The document describes accidental liquid damage to insured equipment.",
+              "An authorised repair inspection confirms physical damage.",
+              "A repair estimate supports the claimed amount of 0.35 GEN."
+            ],
+            "limitWei": "1000000000000000000",
+            "deductibleWei": "100000000000000000",
+            "startsAt": "1790812800",
+            "endsAt": "1792077120",
+            "poolWei": "1000000000000000000",
+            "paidWei": "0",
+            "withdrawnWei": "0",
+            "reservedWei": "650000000000000000",
+            "recoverableWei": "0",
+            "reportingEndsAt": "1792681920",
+            "claimCount": 2,
+            "status": "ACTIVE",
+            "policyVersion": "claimline-policy-v2"
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "350000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/equipment-damage-report.txt",
+            "evidenceDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "status": "APPROVED",
+            "outcome": "APPROVED",
+            "payoutBand": 100,
+            "confidenceBand": "HIGH",
+            "reason": "All four conditions are satisfied by the verified document. The incident date falls inside the policy period, the cause is accidental liquid damage to owned equipment, the authorised repair centre confirms physical damage, and the estimate exactly matches the 0.35 GEN claim.",
+            "conditions": [
+              {
+                "condition": "The incident occurred inside the covered period.",
+                "passed": true,
+                "reason": "Claim incident date 1792022400 and document date 15 October 2026 both fall between 1790812800 and 1792077120."
+              },
+              {
+                "condition": "The document describes accidental liquid damage to insured equipment.",
+                "passed": true,
+                "reason": "Sealed water bottle leak during travel caused laptop failure; declaration states equipment is owned by the insured."
+              },
+              {
+                "condition": "An authorised repair inspection confirms physical damage.",
+                "passed": true,
+                "reason": "Claimline Test Repair Centre inspection found liquid damage to main board and keyboard."
+              },
+              {
+                "condition": "A repair estimate supports the claimed amount of 0.35 GEN.",
+                "passed": true,
+                "reason": "Repair estimate totals exactly 0.35 GEN (0.25 parts + 0.10 labour)."
+              }
+            ],
+            "inconsistencies": [],
+            "contentDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "payoutWei": "250000000000000000",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 1,
+            "decisionRevision": 1,
+            "appeals": 0,
+            "decisionIsCurrent": true
+          },
+          {
+            "id": "c2",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "500000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/out-of-scope-report.txt",
+            "evidenceDigest": "sha256:e68452e83c1a1b8f899043314b702399301c50660c0ddca9a239cd98d5da8ccf",
+            "status": "FILED",
+            "outcome": "NONE",
+            "payoutBand": 0,
+            "confidenceBand": "NONE",
+            "reason": "",
+            "conditions": [],
+            "inconsistencies": [],
+            "contentDigest": "",
+            "payoutWei": "0",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 0,
+            "decisionRevision": 0,
+            "appeals": 0,
+            "decisionIsCurrent": false
+          }
+        ],
+        "policyVersion": "claimline-policy-v2",
+        "policyCount": 1,
+        "claimCount": 2
+      },
+      "beforeBalances": {
+        "0xc85B35932Bb3b5bAfc5d3C7770Fc2e4f0Bc71fd3": "1000000000000000000",
+        "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71": "9600000000000004999",
+        "0x3654661080bC75Fd1674d5D81728Af424ff41622": "1000000000000000000",
+        "0xd02D27c7B19c2C40eFaCA8a0a1Ede626d58620FA": "1000000000000000000"
+      },
+      "execution": "ERROR",
+      "afterState": {
+        "policies": [
+          {
+            "id": "p1",
+            "insurer": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+            "holder": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "coverage": "Steward review: liquid damage",
+            "wording": "This policy covers accidental liquid damage to equipment owned by the insured. A repair centre inspection and estimate must support the claim. Software subscriptions and voluntary cancellations are excluded.",
+            "conditions": [
+              "The incident occurred inside the covered period.",
+              "The document describes accidental liquid damage to insured equipment.",
+              "An authorised repair inspection confirms physical damage.",
+              "A repair estimate supports the claimed amount of 0.35 GEN."
+            ],
+            "limitWei": "1000000000000000000",
+            "deductibleWei": "100000000000000000",
+            "startsAt": "1790812800",
+            "endsAt": "1792077120",
+            "poolWei": "1000000000000000000",
+            "paidWei": "0",
+            "withdrawnWei": "0",
+            "reservedWei": "650000000000000000",
+            "recoverableWei": "0",
+            "reportingEndsAt": "1792681920",
+            "claimCount": 2,
+            "status": "ACTIVE",
+            "policyVersion": "claimline-policy-v2"
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "350000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/equipment-damage-report.txt",
+            "evidenceDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "status": "APPROVED",
+            "outcome": "APPROVED",
+            "payoutBand": 100,
+            "confidenceBand": "HIGH",
+            "reason": "All four conditions are satisfied by the verified document. The incident date falls inside the policy period, the cause is accidental liquid damage to owned equipment, the authorised repair centre confirms physical damage, and the estimate exactly matches the 0.35 GEN claim.",
+            "conditions": [
+              {
+                "condition": "The incident occurred inside the covered period.",
+                "passed": true,
+                "reason": "Claim incident date 1792022400 and document date 15 October 2026 both fall between 1790812800 and 1792077120."
+              },
+              {
+                "condition": "The document describes accidental liquid damage to insured equipment.",
+                "passed": true,
+                "reason": "Sealed water bottle leak during travel caused laptop failure; declaration states equipment is owned by the insured."
+              },
+              {
+                "condition": "An authorised repair inspection confirms physical damage.",
+                "passed": true,
+                "reason": "Claimline Test Repair Centre inspection found liquid damage to main board and keyboard."
+              },
+              {
+                "condition": "A repair estimate supports the claimed amount of 0.35 GEN.",
+                "passed": true,
+                "reason": "Repair estimate totals exactly 0.35 GEN (0.25 parts + 0.10 labour)."
+              }
+            ],
+            "inconsistencies": [],
+            "contentDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "payoutWei": "250000000000000000",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 1,
+            "decisionRevision": 1,
+            "appeals": 0,
+            "decisionIsCurrent": true
+          },
+          {
+            "id": "c2",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "500000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/out-of-scope-report.txt",
+            "evidenceDigest": "sha256:e68452e83c1a1b8f899043314b702399301c50660c0ddca9a239cd98d5da8ccf",
+            "status": "FILED",
+            "outcome": "NONE",
+            "payoutBand": 0,
+            "confidenceBand": "NONE",
+            "reason": "",
+            "conditions": [],
+            "inconsistencies": [],
+            "contentDigest": "",
+            "payoutWei": "0",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 0,
+            "decisionRevision": 0,
+            "appeals": 0,
+            "decisionIsCurrent": false
+          }
+        ],
+        "policyVersion": "claimline-policy-v2",
+        "policyCount": 1,
+        "claimCount": 2
+      },
+      "afterBalances": {
+        "0xc85B35932Bb3b5bAfc5d3C7770Fc2e4f0Bc71fd3": "1000000000000000000",
+        "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71": "9600000000000004999",
+        "0x3654661080bC75Fd1674d5D81728Af424ff41622": "1000000000000000000",
+        "0xd02D27c7B19c2C40eFaCA8a0a1Ede626d58620FA": "1000000000000000000"
+      },
+      "rejection": {
+        "raw": "AU9ubHkgdGhlIGluc3VyZXIgY2FuIHNldHRsZSB0aGlzIGNsYWlt",
+        "status": "rollback",
+        "payload": "Only the insurer can settle this claim"
+      },
+      "stateAndBalancesUnchanged": true
+    },
+    {
+      "label": "Native GEN reaches approved claimant wallet",
+      "method": "settle",
+      "hash": "0xe5cfc4622602890c900c605860515d692e3906c29e79eb2d5a7ac9de1d4a7842",
+      "status": "FINALIZED",
+      "execution": "SUCCESS",
+      "beforeState": {
+        "policies": [
+          {
+            "id": "p1",
+            "insurer": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+            "holder": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "coverage": "Steward review: liquid damage",
+            "wording": "This policy covers accidental liquid damage to equipment owned by the insured. A repair centre inspection and estimate must support the claim. Software subscriptions and voluntary cancellations are excluded.",
+            "conditions": [
+              "The incident occurred inside the covered period.",
+              "The document describes accidental liquid damage to insured equipment.",
+              "An authorised repair inspection confirms physical damage.",
+              "A repair estimate supports the claimed amount of 0.35 GEN."
+            ],
+            "limitWei": "1000000000000000000",
+            "deductibleWei": "100000000000000000",
+            "startsAt": "1790812800",
+            "endsAt": "1792077120",
+            "poolWei": "1000000000000000000",
+            "paidWei": "0",
+            "withdrawnWei": "0",
+            "reservedWei": "650000000000000000",
+            "recoverableWei": "0",
+            "reportingEndsAt": "1792681920",
+            "claimCount": 2,
+            "status": "ACTIVE",
+            "policyVersion": "claimline-policy-v2"
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "350000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/equipment-damage-report.txt",
+            "evidenceDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "status": "APPROVED",
+            "outcome": "APPROVED",
+            "payoutBand": 100,
+            "confidenceBand": "HIGH",
+            "reason": "All four conditions are satisfied by the verified document. The incident date falls inside the policy period, the cause is accidental liquid damage to owned equipment, the authorised repair centre confirms physical damage, and the estimate exactly matches the 0.35 GEN claim.",
+            "conditions": [
+              {
+                "condition": "The incident occurred inside the covered period.",
+                "passed": true,
+                "reason": "Claim incident date 1792022400 and document date 15 October 2026 both fall between 1790812800 and 1792077120."
+              },
+              {
+                "condition": "The document describes accidental liquid damage to insured equipment.",
+                "passed": true,
+                "reason": "Sealed water bottle leak during travel caused laptop failure; declaration states equipment is owned by the insured."
+              },
+              {
+                "condition": "An authorised repair inspection confirms physical damage.",
+                "passed": true,
+                "reason": "Claimline Test Repair Centre inspection found liquid damage to main board and keyboard."
+              },
+              {
+                "condition": "A repair estimate supports the claimed amount of 0.35 GEN.",
+                "passed": true,
+                "reason": "Repair estimate totals exactly 0.35 GEN (0.25 parts + 0.10 labour)."
+              }
+            ],
+            "inconsistencies": [],
+            "contentDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "payoutWei": "250000000000000000",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 1,
+            "decisionRevision": 1,
+            "appeals": 0,
+            "decisionIsCurrent": true
+          },
+          {
+            "id": "c2",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "500000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/out-of-scope-report.txt",
+            "evidenceDigest": "sha256:e68452e83c1a1b8f899043314b702399301c50660c0ddca9a239cd98d5da8ccf",
+            "status": "FILED",
+            "outcome": "NONE",
+            "payoutBand": 0,
+            "confidenceBand": "NONE",
+            "reason": "",
+            "conditions": [],
+            "inconsistencies": [],
+            "contentDigest": "",
+            "payoutWei": "0",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 0,
+            "decisionRevision": 0,
+            "appeals": 0,
+            "decisionIsCurrent": false
+          }
+        ],
+        "policyVersion": "claimline-policy-v2",
+        "policyCount": 1,
+        "claimCount": 2
+      },
+      "afterState": {
+        "policies": [
+          {
+            "id": "p1",
+            "insurer": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+            "holder": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "coverage": "Steward review: liquid damage",
+            "wording": "This policy covers accidental liquid damage to equipment owned by the insured. A repair centre inspection and estimate must support the claim. Software subscriptions and voluntary cancellations are excluded.",
+            "conditions": [
+              "The incident occurred inside the covered period.",
+              "The document describes accidental liquid damage to insured equipment.",
+              "An authorised repair inspection confirms physical damage.",
+              "A repair estimate supports the claimed amount of 0.35 GEN."
+            ],
+            "limitWei": "1000000000000000000",
+            "deductibleWei": "100000000000000000",
+            "startsAt": "1790812800",
+            "endsAt": "1792077120",
+            "poolWei": "750000000000000000",
+            "paidWei": "250000000000000000",
+            "withdrawnWei": "0",
+            "reservedWei": "400000000000000000",
+            "recoverableWei": "0",
+            "reportingEndsAt": "1792681920",
+            "claimCount": 2,
+            "status": "ACTIVE",
+            "policyVersion": "claimline-policy-v2"
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "350000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/equipment-damage-report.txt",
+            "evidenceDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "status": "SETTLED",
+            "outcome": "APPROVED",
+            "payoutBand": 100,
+            "confidenceBand": "HIGH",
+            "reason": "All four conditions are satisfied by the verified document. The incident date falls inside the policy period, the cause is accidental liquid damage to owned equipment, the authorised repair centre confirms physical damage, and the estimate exactly matches the 0.35 GEN claim.",
+            "conditions": [
+              {
+                "condition": "The incident occurred inside the covered period.",
+                "passed": true,
+                "reason": "Claim incident date 1792022400 and document date 15 October 2026 both fall between 1790812800 and 1792077120."
+              },
+              {
+                "condition": "The document describes accidental liquid damage to insured equipment.",
+                "passed": true,
+                "reason": "Sealed water bottle leak during travel caused laptop failure; declaration states equipment is owned by the insured."
+              },
+              {
+                "condition": "An authorised repair inspection confirms physical damage.",
+                "passed": true,
+                "reason": "Claimline Test Repair Centre inspection found liquid damage to main board and keyboard."
+              },
+              {
+                "condition": "A repair estimate supports the claimed amount of 0.35 GEN.",
+                "passed": true,
+                "reason": "Repair estimate totals exactly 0.35 GEN (0.25 parts + 0.10 labour)."
+              }
+            ],
+            "inconsistencies": [],
+            "contentDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "payoutWei": "250000000000000000",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 1,
+            "decisionRevision": 1,
+            "appeals": 0,
+            "decisionIsCurrent": true
+          },
+          {
+            "id": "c2",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "500000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/out-of-scope-report.txt",
+            "evidenceDigest": "sha256:e68452e83c1a1b8f899043314b702399301c50660c0ddca9a239cd98d5da8ccf",
+            "status": "FILED",
+            "outcome": "NONE",
+            "payoutBand": 0,
+            "confidenceBand": "NONE",
+            "reason": "",
+            "conditions": [],
+            "inconsistencies": [],
+            "contentDigest": "",
+            "payoutWei": "0",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 0,
+            "decisionRevision": 0,
+            "appeals": 0,
+            "decisionIsCurrent": false
+          }
+        ],
+        "policyVersion": "claimline-policy-v2",
+        "policyCount": 1,
+        "claimCount": 2
+      },
+      "beforeBalances": {
+        "0xc85B35932Bb3b5bAfc5d3C7770Fc2e4f0Bc71fd3": "1000000000000000000",
+        "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71": "9600000000000004999",
+        "0x3654661080bC75Fd1674d5D81728Af424ff41622": "1000000000000000000",
+        "0xd02D27c7B19c2C40eFaCA8a0a1Ede626d58620FA": "1000000000000000000"
+      },
+      "afterBalances": {
+        "0xc85B35932Bb3b5bAfc5d3C7770Fc2e4f0Bc71fd3": "750000000000000000",
+        "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71": "9600000000000004999",
+        "0x3654661080bC75Fd1674d5D81728Af424ff41622": "1250000000000000000",
+        "0xd02D27c7B19c2C40eFaCA8a0a1Ede626d58620FA": "1000000000000000000"
+      },
+      "recipient": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+      "recipientDeltaWei": "250000000000000000"
+    },
+    {
+      "label": "Double payout rejects without changing balances",
+      "method": "settle",
+      "hash": "0xc077c2540ef9c10fab9ee4dad5d6c71fb19a3f2ad167bafc47c2f34c118f3a4c",
+      "status": "FINALIZED",
+      "execution": "ERROR",
+      "beforeState": {
+        "policies": [
+          {
+            "id": "p1",
+            "insurer": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+            "holder": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "coverage": "Steward review: liquid damage",
+            "wording": "This policy covers accidental liquid damage to equipment owned by the insured. A repair centre inspection and estimate must support the claim. Software subscriptions and voluntary cancellations are excluded.",
+            "conditions": [
+              "The incident occurred inside the covered period.",
+              "The document describes accidental liquid damage to insured equipment.",
+              "An authorised repair inspection confirms physical damage.",
+              "A repair estimate supports the claimed amount of 0.35 GEN."
+            ],
+            "limitWei": "1000000000000000000",
+            "deductibleWei": "100000000000000000",
+            "startsAt": "1790812800",
+            "endsAt": "1792077120",
+            "poolWei": "750000000000000000",
+            "paidWei": "250000000000000000",
+            "withdrawnWei": "0",
+            "reservedWei": "400000000000000000",
+            "recoverableWei": "0",
+            "reportingEndsAt": "1792681920",
+            "claimCount": 2,
+            "status": "ACTIVE",
+            "policyVersion": "claimline-policy-v2"
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "350000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/equipment-damage-report.txt",
+            "evidenceDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "status": "SETTLED",
+            "outcome": "APPROVED",
+            "payoutBand": 100,
+            "confidenceBand": "HIGH",
+            "reason": "All four conditions are satisfied by the verified document. The incident date falls inside the policy period, the cause is accidental liquid damage to owned equipment, the authorised repair centre confirms physical damage, and the estimate exactly matches the 0.35 GEN claim.",
+            "conditions": [
+              {
+                "condition": "The incident occurred inside the covered period.",
+                "passed": true,
+                "reason": "Claim incident date 1792022400 and document date 15 October 2026 both fall between 1790812800 and 1792077120."
+              },
+              {
+                "condition": "The document describes accidental liquid damage to insured equipment.",
+                "passed": true,
+                "reason": "Sealed water bottle leak during travel caused laptop failure; declaration states equipment is owned by the insured."
+              },
+              {
+                "condition": "An authorised repair inspection confirms physical damage.",
+                "passed": true,
+                "reason": "Claimline Test Repair Centre inspection found liquid damage to main board and keyboard."
+              },
+              {
+                "condition": "A repair estimate supports the claimed amount of 0.35 GEN.",
+                "passed": true,
+                "reason": "Repair estimate totals exactly 0.35 GEN (0.25 parts + 0.10 labour)."
+              }
+            ],
+            "inconsistencies": [],
+            "contentDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "payoutWei": "250000000000000000",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 1,
+            "decisionRevision": 1,
+            "appeals": 0,
+            "decisionIsCurrent": true
+          },
+          {
+            "id": "c2",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "500000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/out-of-scope-report.txt",
+            "evidenceDigest": "sha256:e68452e83c1a1b8f899043314b702399301c50660c0ddca9a239cd98d5da8ccf",
+            "status": "FILED",
+            "outcome": "NONE",
+            "payoutBand": 0,
+            "confidenceBand": "NONE",
+            "reason": "",
+            "conditions": [],
+            "inconsistencies": [],
+            "contentDigest": "",
+            "payoutWei": "0",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 0,
+            "decisionRevision": 0,
+            "appeals": 0,
+            "decisionIsCurrent": false
+          }
+        ],
+        "policyVersion": "claimline-policy-v2",
+        "policyCount": 1,
+        "claimCount": 2
+      },
+      "afterState": {
+        "policies": [
+          {
+            "id": "p1",
+            "insurer": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+            "holder": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "coverage": "Steward review: liquid damage",
+            "wording": "This policy covers accidental liquid damage to equipment owned by the insured. A repair centre inspection and estimate must support the claim. Software subscriptions and voluntary cancellations are excluded.",
+            "conditions": [
+              "The incident occurred inside the covered period.",
+              "The document describes accidental liquid damage to insured equipment.",
+              "An authorised repair inspection confirms physical damage.",
+              "A repair estimate supports the claimed amount of 0.35 GEN."
+            ],
+            "limitWei": "1000000000000000000",
+            "deductibleWei": "100000000000000000",
+            "startsAt": "1790812800",
+            "endsAt": "1792077120",
+            "poolWei": "750000000000000000",
+            "paidWei": "250000000000000000",
+            "withdrawnWei": "0",
+            "reservedWei": "400000000000000000",
+            "recoverableWei": "0",
+            "reportingEndsAt": "1792681920",
+            "claimCount": 2,
+            "status": "ACTIVE",
+            "policyVersion": "claimline-policy-v2"
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "350000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/equipment-damage-report.txt",
+            "evidenceDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "status": "SETTLED",
+            "outcome": "APPROVED",
+            "payoutBand": 100,
+            "confidenceBand": "HIGH",
+            "reason": "All four conditions are satisfied by the verified document. The incident date falls inside the policy period, the cause is accidental liquid damage to owned equipment, the authorised repair centre confirms physical damage, and the estimate exactly matches the 0.35 GEN claim.",
+            "conditions": [
+              {
+                "condition": "The incident occurred inside the covered period.",
+                "passed": true,
+                "reason": "Claim incident date 1792022400 and document date 15 October 2026 both fall between 1790812800 and 1792077120."
+              },
+              {
+                "condition": "The document describes accidental liquid damage to insured equipment.",
+                "passed": true,
+                "reason": "Sealed water bottle leak during travel caused laptop failure; declaration states equipment is owned by the insured."
+              },
+              {
+                "condition": "An authorised repair inspection confirms physical damage.",
+                "passed": true,
+                "reason": "Claimline Test Repair Centre inspection found liquid damage to main board and keyboard."
+              },
+              {
+                "condition": "A repair estimate supports the claimed amount of 0.35 GEN.",
+                "passed": true,
+                "reason": "Repair estimate totals exactly 0.35 GEN (0.25 parts + 0.10 labour)."
+              }
+            ],
+            "inconsistencies": [],
+            "contentDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "payoutWei": "250000000000000000",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 1,
+            "decisionRevision": 1,
+            "appeals": 0,
+            "decisionIsCurrent": true
+          },
+          {
+            "id": "c2",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "500000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/out-of-scope-report.txt",
+            "evidenceDigest": "sha256:e68452e83c1a1b8f899043314b702399301c50660c0ddca9a239cd98d5da8ccf",
+            "status": "FILED",
+            "outcome": "NONE",
+            "payoutBand": 0,
+            "confidenceBand": "NONE",
+            "reason": "",
+            "conditions": [],
+            "inconsistencies": [],
+            "contentDigest": "",
+            "payoutWei": "0",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 0,
+            "decisionRevision": 0,
+            "appeals": 0,
+            "decisionIsCurrent": false
+          }
+        ],
+        "policyVersion": "claimline-policy-v2",
+        "policyCount": 1,
+        "claimCount": 2
+      },
+      "beforeBalances": {
+        "0xc85B35932Bb3b5bAfc5d3C7770Fc2e4f0Bc71fd3": "750000000000000000",
+        "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71": "9600000000000004999",
+        "0x3654661080bC75Fd1674d5D81728Af424ff41622": "1250000000000000000",
+        "0xd02D27c7B19c2C40eFaCA8a0a1Ede626d58620FA": "1000000000000000000"
+      },
+      "afterBalances": {
+        "0xc85B35932Bb3b5bAfc5d3C7770Fc2e4f0Bc71fd3": "750000000000000000",
+        "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71": "9600000000000004999",
+        "0x3654661080bC75Fd1674d5D81728Af424ff41622": "1250000000000000000",
+        "0xd02D27c7B19c2C40eFaCA8a0a1Ede626d58620FA": "1000000000000000000"
+      },
+      "stateAndBalancesUnchanged": true
+    },
+    {
+      "label": "Insurer closes reporting-expired policy",
+      "method": "close_policy",
+      "hash": "0xcc52823b28f9993ff1b00940e0092482f644c6c07df9475d752f7fc546ee6ea1",
+      "status": "FINALIZED",
+      "execution": "SUCCESS",
+      "beforeState": {
+        "policies": [
+          {
+            "id": "p1",
+            "insurer": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+            "holder": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "coverage": "Steward review: liquid damage",
+            "wording": "This policy covers accidental liquid damage to equipment owned by the insured. A repair centre inspection and estimate must support the claim. Software subscriptions and voluntary cancellations are excluded.",
+            "conditions": [
+              "The incident occurred inside the covered period.",
+              "The document describes accidental liquid damage to insured equipment.",
+              "An authorised repair inspection confirms physical damage.",
+              "A repair estimate supports the claimed amount of 0.35 GEN."
+            ],
+            "limitWei": "1000000000000000000",
+            "deductibleWei": "100000000000000000",
+            "startsAt": "1790812800",
+            "endsAt": "1792077120",
+            "poolWei": "750000000000000000",
+            "paidWei": "250000000000000000",
+            "withdrawnWei": "0",
+            "reservedWei": "400000000000000000",
+            "recoverableWei": "0",
+            "reportingEndsAt": "1792681920",
+            "claimCount": 2,
+            "status": "ACTIVE",
+            "policyVersion": "claimline-policy-v2"
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "350000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/equipment-damage-report.txt",
+            "evidenceDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "status": "SETTLED",
+            "outcome": "APPROVED",
+            "payoutBand": 100,
+            "confidenceBand": "HIGH",
+            "reason": "All four conditions are satisfied by the verified document. The incident date falls inside the policy period, the cause is accidental liquid damage to owned equipment, the authorised repair centre confirms physical damage, and the estimate exactly matches the 0.35 GEN claim.",
+            "conditions": [
+              {
+                "condition": "The incident occurred inside the covered period.",
+                "passed": true,
+                "reason": "Claim incident date 1792022400 and document date 15 October 2026 both fall between 1790812800 and 1792077120."
+              },
+              {
+                "condition": "The document describes accidental liquid damage to insured equipment.",
+                "passed": true,
+                "reason": "Sealed water bottle leak during travel caused laptop failure; declaration states equipment is owned by the insured."
+              },
+              {
+                "condition": "An authorised repair inspection confirms physical damage.",
+                "passed": true,
+                "reason": "Claimline Test Repair Centre inspection found liquid damage to main board and keyboard."
+              },
+              {
+                "condition": "A repair estimate supports the claimed amount of 0.35 GEN.",
+                "passed": true,
+                "reason": "Repair estimate totals exactly 0.35 GEN (0.25 parts + 0.10 labour)."
+              }
+            ],
+            "inconsistencies": [],
+            "contentDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "payoutWei": "250000000000000000",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 1,
+            "decisionRevision": 1,
+            "appeals": 0,
+            "decisionIsCurrent": true
+          },
+          {
+            "id": "c2",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "500000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/out-of-scope-report.txt",
+            "evidenceDigest": "sha256:e68452e83c1a1b8f899043314b702399301c50660c0ddca9a239cd98d5da8ccf",
+            "status": "FILED",
+            "outcome": "NONE",
+            "payoutBand": 0,
+            "confidenceBand": "NONE",
+            "reason": "",
+            "conditions": [],
+            "inconsistencies": [],
+            "contentDigest": "",
+            "payoutWei": "0",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 0,
+            "decisionRevision": 0,
+            "appeals": 0,
+            "decisionIsCurrent": false
+          }
+        ],
+        "policyVersion": "claimline-policy-v2",
+        "policyCount": 1,
+        "claimCount": 2
+      },
+      "afterState": {
+        "policies": [
+          {
+            "id": "p1",
+            "insurer": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+            "holder": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "coverage": "Steward review: liquid damage",
+            "wording": "This policy covers accidental liquid damage to equipment owned by the insured. A repair centre inspection and estimate must support the claim. Software subscriptions and voluntary cancellations are excluded.",
+            "conditions": [
+              "The incident occurred inside the covered period.",
+              "The document describes accidental liquid damage to insured equipment.",
+              "An authorised repair inspection confirms physical damage.",
+              "A repair estimate supports the claimed amount of 0.35 GEN."
+            ],
+            "limitWei": "1000000000000000000",
+            "deductibleWei": "100000000000000000",
+            "startsAt": "1790812800",
+            "endsAt": "1792077120",
+            "poolWei": "750000000000000000",
+            "paidWei": "250000000000000000",
+            "withdrawnWei": "0",
+            "reservedWei": "400000000000000000",
+            "recoverableWei": "350000000000000000",
+            "reportingEndsAt": "1792681920",
+            "claimCount": 2,
+            "status": "CLOSED",
+            "policyVersion": "claimline-policy-v2"
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "350000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/equipment-damage-report.txt",
+            "evidenceDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "status": "SETTLED",
+            "outcome": "APPROVED",
+            "payoutBand": 100,
+            "confidenceBand": "HIGH",
+            "reason": "All four conditions are satisfied by the verified document. The incident date falls inside the policy period, the cause is accidental liquid damage to owned equipment, the authorised repair centre confirms physical damage, and the estimate exactly matches the 0.35 GEN claim.",
+            "conditions": [
+              {
+                "condition": "The incident occurred inside the covered period.",
+                "passed": true,
+                "reason": "Claim incident date 1792022400 and document date 15 October 2026 both fall between 1790812800 and 1792077120."
+              },
+              {
+                "condition": "The document describes accidental liquid damage to insured equipment.",
+                "passed": true,
+                "reason": "Sealed water bottle leak during travel caused laptop failure; declaration states equipment is owned by the insured."
+              },
+              {
+                "condition": "An authorised repair inspection confirms physical damage.",
+                "passed": true,
+                "reason": "Claimline Test Repair Centre inspection found liquid damage to main board and keyboard."
+              },
+              {
+                "condition": "A repair estimate supports the claimed amount of 0.35 GEN.",
+                "passed": true,
+                "reason": "Repair estimate totals exactly 0.35 GEN (0.25 parts + 0.10 labour)."
+              }
+            ],
+            "inconsistencies": [],
+            "contentDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "payoutWei": "250000000000000000",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 1,
+            "decisionRevision": 1,
+            "appeals": 0,
+            "decisionIsCurrent": true
+          },
+          {
+            "id": "c2",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "500000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/out-of-scope-report.txt",
+            "evidenceDigest": "sha256:e68452e83c1a1b8f899043314b702399301c50660c0ddca9a239cd98d5da8ccf",
+            "status": "FILED",
+            "outcome": "NONE",
+            "payoutBand": 0,
+            "confidenceBand": "NONE",
+            "reason": "",
+            "conditions": [],
+            "inconsistencies": [],
+            "contentDigest": "",
+            "payoutWei": "0",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 0,
+            "decisionRevision": 0,
+            "appeals": 0,
+            "decisionIsCurrent": false
+          }
+        ],
+        "policyVersion": "claimline-policy-v2",
+        "policyCount": 1,
+        "claimCount": 2
+      },
+      "beforeBalances": {
+        "0xc85B35932Bb3b5bAfc5d3C7770Fc2e4f0Bc71fd3": "750000000000000000",
+        "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71": "9600000000000004999",
+        "0x3654661080bC75Fd1674d5D81728Af424ff41622": "1250000000000000000",
+        "0xd02D27c7B19c2C40eFaCA8a0a1Ede626d58620FA": "1000000000000000000"
+      },
+      "afterBalances": {
+        "0xc85B35932Bb3b5bAfc5d3C7770Fc2e4f0Bc71fd3": "750000000000000000",
+        "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71": "9600000000000004999",
+        "0x3654661080bC75Fd1674d5D81728Af424ff41622": "1250000000000000000",
+        "0xd02D27c7B19c2C40eFaCA8a0a1Ede626d58620FA": "1000000000000000000"
+      }
+    },
+    {
+      "label": "Unresolved claim collateral cannot be withdrawn",
+      "method": "withdraw_unused",
+      "hash": "0x16135a98248bcd5e425ae4fe79ea3757c950f4e30dca194613adb6fe9de0b478",
+      "status": "FINALIZED",
+      "execution": "ERROR",
+      "beforeState": {
+        "policies": [
+          {
+            "id": "p1",
+            "insurer": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+            "holder": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "coverage": "Steward review: liquid damage",
+            "wording": "This policy covers accidental liquid damage to equipment owned by the insured. A repair centre inspection and estimate must support the claim. Software subscriptions and voluntary cancellations are excluded.",
+            "conditions": [
+              "The incident occurred inside the covered period.",
+              "The document describes accidental liquid damage to insured equipment.",
+              "An authorised repair inspection confirms physical damage.",
+              "A repair estimate supports the claimed amount of 0.35 GEN."
+            ],
+            "limitWei": "1000000000000000000",
+            "deductibleWei": "100000000000000000",
+            "startsAt": "1790812800",
+            "endsAt": "1792077120",
+            "poolWei": "750000000000000000",
+            "paidWei": "250000000000000000",
+            "withdrawnWei": "0",
+            "reservedWei": "400000000000000000",
+            "recoverableWei": "350000000000000000",
+            "reportingEndsAt": "1792681920",
+            "claimCount": 2,
+            "status": "CLOSED",
+            "policyVersion": "claimline-policy-v2"
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "350000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/equipment-damage-report.txt",
+            "evidenceDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "status": "SETTLED",
+            "outcome": "APPROVED",
+            "payoutBand": 100,
+            "confidenceBand": "HIGH",
+            "reason": "All four conditions are satisfied by the verified document. The incident date falls inside the policy period, the cause is accidental liquid damage to owned equipment, the authorised repair centre confirms physical damage, and the estimate exactly matches the 0.35 GEN claim.",
+            "conditions": [
+              {
+                "condition": "The incident occurred inside the covered period.",
+                "passed": true,
+                "reason": "Claim incident date 1792022400 and document date 15 October 2026 both fall between 1790812800 and 1792077120."
+              },
+              {
+                "condition": "The document describes accidental liquid damage to insured equipment.",
+                "passed": true,
+                "reason": "Sealed water bottle leak during travel caused laptop failure; declaration states equipment is owned by the insured."
+              },
+              {
+                "condition": "An authorised repair inspection confirms physical damage.",
+                "passed": true,
+                "reason": "Claimline Test Repair Centre inspection found liquid damage to main board and keyboard."
+              },
+              {
+                "condition": "A repair estimate supports the claimed amount of 0.35 GEN.",
+                "passed": true,
+                "reason": "Repair estimate totals exactly 0.35 GEN (0.25 parts + 0.10 labour)."
+              }
+            ],
+            "inconsistencies": [],
+            "contentDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "payoutWei": "250000000000000000",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 1,
+            "decisionRevision": 1,
+            "appeals": 0,
+            "decisionIsCurrent": true
+          },
+          {
+            "id": "c2",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "500000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/out-of-scope-report.txt",
+            "evidenceDigest": "sha256:e68452e83c1a1b8f899043314b702399301c50660c0ddca9a239cd98d5da8ccf",
+            "status": "FILED",
+            "outcome": "NONE",
+            "payoutBand": 0,
+            "confidenceBand": "NONE",
+            "reason": "",
+            "conditions": [],
+            "inconsistencies": [],
+            "contentDigest": "",
+            "payoutWei": "0",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 0,
+            "decisionRevision": 0,
+            "appeals": 0,
+            "decisionIsCurrent": false
+          }
+        ],
+        "policyVersion": "claimline-policy-v2",
+        "policyCount": 1,
+        "claimCount": 2
+      },
+      "afterState": {
+        "policies": [
+          {
+            "id": "p1",
+            "insurer": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+            "holder": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "coverage": "Steward review: liquid damage",
+            "wording": "This policy covers accidental liquid damage to equipment owned by the insured. A repair centre inspection and estimate must support the claim. Software subscriptions and voluntary cancellations are excluded.",
+            "conditions": [
+              "The incident occurred inside the covered period.",
+              "The document describes accidental liquid damage to insured equipment.",
+              "An authorised repair inspection confirms physical damage.",
+              "A repair estimate supports the claimed amount of 0.35 GEN."
+            ],
+            "limitWei": "1000000000000000000",
+            "deductibleWei": "100000000000000000",
+            "startsAt": "1790812800",
+            "endsAt": "1792077120",
+            "poolWei": "750000000000000000",
+            "paidWei": "250000000000000000",
+            "withdrawnWei": "0",
+            "reservedWei": "400000000000000000",
+            "recoverableWei": "350000000000000000",
+            "reportingEndsAt": "1792681920",
+            "claimCount": 2,
+            "status": "CLOSED",
+            "policyVersion": "claimline-policy-v2"
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "350000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/equipment-damage-report.txt",
+            "evidenceDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "status": "SETTLED",
+            "outcome": "APPROVED",
+            "payoutBand": 100,
+            "confidenceBand": "HIGH",
+            "reason": "All four conditions are satisfied by the verified document. The incident date falls inside the policy period, the cause is accidental liquid damage to owned equipment, the authorised repair centre confirms physical damage, and the estimate exactly matches the 0.35 GEN claim.",
+            "conditions": [
+              {
+                "condition": "The incident occurred inside the covered period.",
+                "passed": true,
+                "reason": "Claim incident date 1792022400 and document date 15 October 2026 both fall between 1790812800 and 1792077120."
+              },
+              {
+                "condition": "The document describes accidental liquid damage to insured equipment.",
+                "passed": true,
+                "reason": "Sealed water bottle leak during travel caused laptop failure; declaration states equipment is owned by the insured."
+              },
+              {
+                "condition": "An authorised repair inspection confirms physical damage.",
+                "passed": true,
+                "reason": "Claimline Test Repair Centre inspection found liquid damage to main board and keyboard."
+              },
+              {
+                "condition": "A repair estimate supports the claimed amount of 0.35 GEN.",
+                "passed": true,
+                "reason": "Repair estimate totals exactly 0.35 GEN (0.25 parts + 0.10 labour)."
+              }
+            ],
+            "inconsistencies": [],
+            "contentDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "payoutWei": "250000000000000000",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 1,
+            "decisionRevision": 1,
+            "appeals": 0,
+            "decisionIsCurrent": true
+          },
+          {
+            "id": "c2",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "500000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/out-of-scope-report.txt",
+            "evidenceDigest": "sha256:e68452e83c1a1b8f899043314b702399301c50660c0ddca9a239cd98d5da8ccf",
+            "status": "FILED",
+            "outcome": "NONE",
+            "payoutBand": 0,
+            "confidenceBand": "NONE",
+            "reason": "",
+            "conditions": [],
+            "inconsistencies": [],
+            "contentDigest": "",
+            "payoutWei": "0",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 0,
+            "decisionRevision": 0,
+            "appeals": 0,
+            "decisionIsCurrent": false
+          }
+        ],
+        "policyVersion": "claimline-policy-v2",
+        "policyCount": 1,
+        "claimCount": 2
+      },
+      "beforeBalances": {
+        "0xc85B35932Bb3b5bAfc5d3C7770Fc2e4f0Bc71fd3": "750000000000000000",
+        "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71": "9600000000000004999",
+        "0x3654661080bC75Fd1674d5D81728Af424ff41622": "1250000000000000000",
+        "0xd02D27c7B19c2C40eFaCA8a0a1Ede626d58620FA": "1000000000000000000"
+      },
+      "afterBalances": {
+        "0xc85B35932Bb3b5bAfc5d3C7770Fc2e4f0Bc71fd3": "750000000000000000",
+        "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71": "9600000000000004999",
+        "0x3654661080bC75Fd1674d5D81728Af424ff41622": "1250000000000000000",
+        "0xd02D27c7B19c2C40eFaCA8a0a1Ede626d58620FA": "1000000000000000000"
+      },
+      "stateAndBalancesUnchanged": true
+    },
+    {
+      "label": "Zero withdrawal rejects",
+      "method": "withdraw_unused",
+      "hash": "0x6534ed74f018ccadd066cb3b33e8f3673b1afc6cd325bf751ab047f56b47aa51",
+      "status": "FINALIZED",
+      "execution": "ERROR",
+      "beforeState": {
+        "policies": [
+          {
+            "id": "p1",
+            "insurer": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+            "holder": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "coverage": "Steward review: liquid damage",
+            "wording": "This policy covers accidental liquid damage to equipment owned by the insured. A repair centre inspection and estimate must support the claim. Software subscriptions and voluntary cancellations are excluded.",
+            "conditions": [
+              "The incident occurred inside the covered period.",
+              "The document describes accidental liquid damage to insured equipment.",
+              "An authorised repair inspection confirms physical damage.",
+              "A repair estimate supports the claimed amount of 0.35 GEN."
+            ],
+            "limitWei": "1000000000000000000",
+            "deductibleWei": "100000000000000000",
+            "startsAt": "1790812800",
+            "endsAt": "1792077120",
+            "poolWei": "750000000000000000",
+            "paidWei": "250000000000000000",
+            "withdrawnWei": "0",
+            "reservedWei": "400000000000000000",
+            "recoverableWei": "350000000000000000",
+            "reportingEndsAt": "1792681920",
+            "claimCount": 2,
+            "status": "CLOSED",
+            "policyVersion": "claimline-policy-v2"
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "350000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/equipment-damage-report.txt",
+            "evidenceDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "status": "SETTLED",
+            "outcome": "APPROVED",
+            "payoutBand": 100,
+            "confidenceBand": "HIGH",
+            "reason": "All four conditions are satisfied by the verified document. The incident date falls inside the policy period, the cause is accidental liquid damage to owned equipment, the authorised repair centre confirms physical damage, and the estimate exactly matches the 0.35 GEN claim.",
+            "conditions": [
+              {
+                "condition": "The incident occurred inside the covered period.",
+                "passed": true,
+                "reason": "Claim incident date 1792022400 and document date 15 October 2026 both fall between 1790812800 and 1792077120."
+              },
+              {
+                "condition": "The document describes accidental liquid damage to insured equipment.",
+                "passed": true,
+                "reason": "Sealed water bottle leak during travel caused laptop failure; declaration states equipment is owned by the insured."
+              },
+              {
+                "condition": "An authorised repair inspection confirms physical damage.",
+                "passed": true,
+                "reason": "Claimline Test Repair Centre inspection found liquid damage to main board and keyboard."
+              },
+              {
+                "condition": "A repair estimate supports the claimed amount of 0.35 GEN.",
+                "passed": true,
+                "reason": "Repair estimate totals exactly 0.35 GEN (0.25 parts + 0.10 labour)."
+              }
+            ],
+            "inconsistencies": [],
+            "contentDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "payoutWei": "250000000000000000",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 1,
+            "decisionRevision": 1,
+            "appeals": 0,
+            "decisionIsCurrent": true
+          },
+          {
+            "id": "c2",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "500000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/out-of-scope-report.txt",
+            "evidenceDigest": "sha256:e68452e83c1a1b8f899043314b702399301c50660c0ddca9a239cd98d5da8ccf",
+            "status": "FILED",
+            "outcome": "NONE",
+            "payoutBand": 0,
+            "confidenceBand": "NONE",
+            "reason": "",
+            "conditions": [],
+            "inconsistencies": [],
+            "contentDigest": "",
+            "payoutWei": "0",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 0,
+            "decisionRevision": 0,
+            "appeals": 0,
+            "decisionIsCurrent": false
+          }
+        ],
+        "policyVersion": "claimline-policy-v2",
+        "policyCount": 1,
+        "claimCount": 2
+      },
+      "afterState": {
+        "policies": [
+          {
+            "id": "p1",
+            "insurer": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+            "holder": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "coverage": "Steward review: liquid damage",
+            "wording": "This policy covers accidental liquid damage to equipment owned by the insured. A repair centre inspection and estimate must support the claim. Software subscriptions and voluntary cancellations are excluded.",
+            "conditions": [
+              "The incident occurred inside the covered period.",
+              "The document describes accidental liquid damage to insured equipment.",
+              "An authorised repair inspection confirms physical damage.",
+              "A repair estimate supports the claimed amount of 0.35 GEN."
+            ],
+            "limitWei": "1000000000000000000",
+            "deductibleWei": "100000000000000000",
+            "startsAt": "1790812800",
+            "endsAt": "1792077120",
+            "poolWei": "750000000000000000",
+            "paidWei": "250000000000000000",
+            "withdrawnWei": "0",
+            "reservedWei": "400000000000000000",
+            "recoverableWei": "350000000000000000",
+            "reportingEndsAt": "1792681920",
+            "claimCount": 2,
+            "status": "CLOSED",
+            "policyVersion": "claimline-policy-v2"
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "350000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/equipment-damage-report.txt",
+            "evidenceDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "status": "SETTLED",
+            "outcome": "APPROVED",
+            "payoutBand": 100,
+            "confidenceBand": "HIGH",
+            "reason": "All four conditions are satisfied by the verified document. The incident date falls inside the policy period, the cause is accidental liquid damage to owned equipment, the authorised repair centre confirms physical damage, and the estimate exactly matches the 0.35 GEN claim.",
+            "conditions": [
+              {
+                "condition": "The incident occurred inside the covered period.",
+                "passed": true,
+                "reason": "Claim incident date 1792022400 and document date 15 October 2026 both fall between 1790812800 and 1792077120."
+              },
+              {
+                "condition": "The document describes accidental liquid damage to insured equipment.",
+                "passed": true,
+                "reason": "Sealed water bottle leak during travel caused laptop failure; declaration states equipment is owned by the insured."
+              },
+              {
+                "condition": "An authorised repair inspection confirms physical damage.",
+                "passed": true,
+                "reason": "Claimline Test Repair Centre inspection found liquid damage to main board and keyboard."
+              },
+              {
+                "condition": "A repair estimate supports the claimed amount of 0.35 GEN.",
+                "passed": true,
+                "reason": "Repair estimate totals exactly 0.35 GEN (0.25 parts + 0.10 labour)."
+              }
+            ],
+            "inconsistencies": [],
+            "contentDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "payoutWei": "250000000000000000",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 1,
+            "decisionRevision": 1,
+            "appeals": 0,
+            "decisionIsCurrent": true
+          },
+          {
+            "id": "c2",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "500000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/out-of-scope-report.txt",
+            "evidenceDigest": "sha256:e68452e83c1a1b8f899043314b702399301c50660c0ddca9a239cd98d5da8ccf",
+            "status": "FILED",
+            "outcome": "NONE",
+            "payoutBand": 0,
+            "confidenceBand": "NONE",
+            "reason": "",
+            "conditions": [],
+            "inconsistencies": [],
+            "contentDigest": "",
+            "payoutWei": "0",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 0,
+            "decisionRevision": 0,
+            "appeals": 0,
+            "decisionIsCurrent": false
+          }
+        ],
+        "policyVersion": "claimline-policy-v2",
+        "policyCount": 1,
+        "claimCount": 2
+      },
+      "beforeBalances": {
+        "0xc85B35932Bb3b5bAfc5d3C7770Fc2e4f0Bc71fd3": "750000000000000000",
+        "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71": "9600000000000004999",
+        "0x3654661080bC75Fd1674d5D81728Af424ff41622": "1250000000000000000",
+        "0xd02D27c7B19c2C40eFaCA8a0a1Ede626d58620FA": "1000000000000000000"
+      },
+      "afterBalances": {
+        "0xc85B35932Bb3b5bAfc5d3C7770Fc2e4f0Bc71fd3": "750000000000000000",
+        "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71": "9600000000000004999",
+        "0x3654661080bC75Fd1674d5D81728Af424ff41622": "1250000000000000000",
+        "0xd02D27c7B19c2C40eFaCA8a0a1Ede626d58620FA": "1000000000000000000"
+      },
+      "stateAndBalancesUnchanged": true
+    },
+    {
+      "label": "Negative withdrawal rejects",
+      "method": "withdraw_unused",
+      "hash": "0xec916b26c1bb7aa27739dabe291f9e66e0653a2ad37488bdb32a66d0d3bf4f57",
+      "status": "FINALIZED",
+      "execution": "ERROR",
+      "beforeState": {
+        "policies": [
+          {
+            "id": "p1",
+            "insurer": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+            "holder": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "coverage": "Steward review: liquid damage",
+            "wording": "This policy covers accidental liquid damage to equipment owned by the insured. A repair centre inspection and estimate must support the claim. Software subscriptions and voluntary cancellations are excluded.",
+            "conditions": [
+              "The incident occurred inside the covered period.",
+              "The document describes accidental liquid damage to insured equipment.",
+              "An authorised repair inspection confirms physical damage.",
+              "A repair estimate supports the claimed amount of 0.35 GEN."
+            ],
+            "limitWei": "1000000000000000000",
+            "deductibleWei": "100000000000000000",
+            "startsAt": "1790812800",
+            "endsAt": "1792077120",
+            "poolWei": "750000000000000000",
+            "paidWei": "250000000000000000",
+            "withdrawnWei": "0",
+            "reservedWei": "400000000000000000",
+            "recoverableWei": "350000000000000000",
+            "reportingEndsAt": "1792681920",
+            "claimCount": 2,
+            "status": "CLOSED",
+            "policyVersion": "claimline-policy-v2"
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "350000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/equipment-damage-report.txt",
+            "evidenceDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "status": "SETTLED",
+            "outcome": "APPROVED",
+            "payoutBand": 100,
+            "confidenceBand": "HIGH",
+            "reason": "All four conditions are satisfied by the verified document. The incident date falls inside the policy period, the cause is accidental liquid damage to owned equipment, the authorised repair centre confirms physical damage, and the estimate exactly matches the 0.35 GEN claim.",
+            "conditions": [
+              {
+                "condition": "The incident occurred inside the covered period.",
+                "passed": true,
+                "reason": "Claim incident date 1792022400 and document date 15 October 2026 both fall between 1790812800 and 1792077120."
+              },
+              {
+                "condition": "The document describes accidental liquid damage to insured equipment.",
+                "passed": true,
+                "reason": "Sealed water bottle leak during travel caused laptop failure; declaration states equipment is owned by the insured."
+              },
+              {
+                "condition": "An authorised repair inspection confirms physical damage.",
+                "passed": true,
+                "reason": "Claimline Test Repair Centre inspection found liquid damage to main board and keyboard."
+              },
+              {
+                "condition": "A repair estimate supports the claimed amount of 0.35 GEN.",
+                "passed": true,
+                "reason": "Repair estimate totals exactly 0.35 GEN (0.25 parts + 0.10 labour)."
+              }
+            ],
+            "inconsistencies": [],
+            "contentDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "payoutWei": "250000000000000000",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 1,
+            "decisionRevision": 1,
+            "appeals": 0,
+            "decisionIsCurrent": true
+          },
+          {
+            "id": "c2",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "500000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/out-of-scope-report.txt",
+            "evidenceDigest": "sha256:e68452e83c1a1b8f899043314b702399301c50660c0ddca9a239cd98d5da8ccf",
+            "status": "FILED",
+            "outcome": "NONE",
+            "payoutBand": 0,
+            "confidenceBand": "NONE",
+            "reason": "",
+            "conditions": [],
+            "inconsistencies": [],
+            "contentDigest": "",
+            "payoutWei": "0",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 0,
+            "decisionRevision": 0,
+            "appeals": 0,
+            "decisionIsCurrent": false
+          }
+        ],
+        "policyVersion": "claimline-policy-v2",
+        "policyCount": 1,
+        "claimCount": 2
+      },
+      "afterState": {
+        "policies": [
+          {
+            "id": "p1",
+            "insurer": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+            "holder": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "coverage": "Steward review: liquid damage",
+            "wording": "This policy covers accidental liquid damage to equipment owned by the insured. A repair centre inspection and estimate must support the claim. Software subscriptions and voluntary cancellations are excluded.",
+            "conditions": [
+              "The incident occurred inside the covered period.",
+              "The document describes accidental liquid damage to insured equipment.",
+              "An authorised repair inspection confirms physical damage.",
+              "A repair estimate supports the claimed amount of 0.35 GEN."
+            ],
+            "limitWei": "1000000000000000000",
+            "deductibleWei": "100000000000000000",
+            "startsAt": "1790812800",
+            "endsAt": "1792077120",
+            "poolWei": "750000000000000000",
+            "paidWei": "250000000000000000",
+            "withdrawnWei": "0",
+            "reservedWei": "400000000000000000",
+            "recoverableWei": "350000000000000000",
+            "reportingEndsAt": "1792681920",
+            "claimCount": 2,
+            "status": "CLOSED",
+            "policyVersion": "claimline-policy-v2"
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "350000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/equipment-damage-report.txt",
+            "evidenceDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "status": "SETTLED",
+            "outcome": "APPROVED",
+            "payoutBand": 100,
+            "confidenceBand": "HIGH",
+            "reason": "All four conditions are satisfied by the verified document. The incident date falls inside the policy period, the cause is accidental liquid damage to owned equipment, the authorised repair centre confirms physical damage, and the estimate exactly matches the 0.35 GEN claim.",
+            "conditions": [
+              {
+                "condition": "The incident occurred inside the covered period.",
+                "passed": true,
+                "reason": "Claim incident date 1792022400 and document date 15 October 2026 both fall between 1790812800 and 1792077120."
+              },
+              {
+                "condition": "The document describes accidental liquid damage to insured equipment.",
+                "passed": true,
+                "reason": "Sealed water bottle leak during travel caused laptop failure; declaration states equipment is owned by the insured."
+              },
+              {
+                "condition": "An authorised repair inspection confirms physical damage.",
+                "passed": true,
+                "reason": "Claimline Test Repair Centre inspection found liquid damage to main board and keyboard."
+              },
+              {
+                "condition": "A repair estimate supports the claimed amount of 0.35 GEN.",
+                "passed": true,
+                "reason": "Repair estimate totals exactly 0.35 GEN (0.25 parts + 0.10 labour)."
+              }
+            ],
+            "inconsistencies": [],
+            "contentDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "payoutWei": "250000000000000000",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 1,
+            "decisionRevision": 1,
+            "appeals": 0,
+            "decisionIsCurrent": true
+          },
+          {
+            "id": "c2",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "500000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/out-of-scope-report.txt",
+            "evidenceDigest": "sha256:e68452e83c1a1b8f899043314b702399301c50660c0ddca9a239cd98d5da8ccf",
+            "status": "FILED",
+            "outcome": "NONE",
+            "payoutBand": 0,
+            "confidenceBand": "NONE",
+            "reason": "",
+            "conditions": [],
+            "inconsistencies": [],
+            "contentDigest": "",
+            "payoutWei": "0",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 0,
+            "decisionRevision": 0,
+            "appeals": 0,
+            "decisionIsCurrent": false
+          }
+        ],
+        "policyVersion": "claimline-policy-v2",
+        "policyCount": 1,
+        "claimCount": 2
+      },
+      "beforeBalances": {
+        "0xc85B35932Bb3b5bAfc5d3C7770Fc2e4f0Bc71fd3": "750000000000000000",
+        "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71": "9600000000000004999",
+        "0x3654661080bC75Fd1674d5D81728Af424ff41622": "1250000000000000000",
+        "0xd02D27c7B19c2C40eFaCA8a0a1Ede626d58620FA": "1000000000000000000"
+      },
+      "afterBalances": {
+        "0xc85B35932Bb3b5bAfc5d3C7770Fc2e4f0Bc71fd3": "750000000000000000",
+        "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71": "9600000000000004999",
+        "0x3654661080bC75Fd1674d5D81728Af424ff41622": "1250000000000000000",
+        "0xd02D27c7B19c2C40eFaCA8a0a1Ede626d58620FA": "1000000000000000000"
+      },
+      "stateAndBalancesUnchanged": true
+    },
+    {
+      "label": "Unused native GEN reaches insurer while claim reserve remains",
+      "method": "withdraw_unused",
+      "hash": "0xd272c75e1549d4b43c6c2f0f58de612291475207686a51294a9335b98be7860a",
+      "status": "FINALIZED",
+      "execution": "SUCCESS",
+      "beforeState": {
+        "policies": [
+          {
+            "id": "p1",
+            "insurer": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+            "holder": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "coverage": "Steward review: liquid damage",
+            "wording": "This policy covers accidental liquid damage to equipment owned by the insured. A repair centre inspection and estimate must support the claim. Software subscriptions and voluntary cancellations are excluded.",
+            "conditions": [
+              "The incident occurred inside the covered period.",
+              "The document describes accidental liquid damage to insured equipment.",
+              "An authorised repair inspection confirms physical damage.",
+              "A repair estimate supports the claimed amount of 0.35 GEN."
+            ],
+            "limitWei": "1000000000000000000",
+            "deductibleWei": "100000000000000000",
+            "startsAt": "1790812800",
+            "endsAt": "1792077120",
+            "poolWei": "750000000000000000",
+            "paidWei": "250000000000000000",
+            "withdrawnWei": "0",
+            "reservedWei": "400000000000000000",
+            "recoverableWei": "350000000000000000",
+            "reportingEndsAt": "1792681920",
+            "claimCount": 2,
+            "status": "CLOSED",
+            "policyVersion": "claimline-policy-v2"
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "350000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/equipment-damage-report.txt",
+            "evidenceDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "status": "SETTLED",
+            "outcome": "APPROVED",
+            "payoutBand": 100,
+            "confidenceBand": "HIGH",
+            "reason": "All four conditions are satisfied by the verified document. The incident date falls inside the policy period, the cause is accidental liquid damage to owned equipment, the authorised repair centre confirms physical damage, and the estimate exactly matches the 0.35 GEN claim.",
+            "conditions": [
+              {
+                "condition": "The incident occurred inside the covered period.",
+                "passed": true,
+                "reason": "Claim incident date 1792022400 and document date 15 October 2026 both fall between 1790812800 and 1792077120."
+              },
+              {
+                "condition": "The document describes accidental liquid damage to insured equipment.",
+                "passed": true,
+                "reason": "Sealed water bottle leak during travel caused laptop failure; declaration states equipment is owned by the insured."
+              },
+              {
+                "condition": "An authorised repair inspection confirms physical damage.",
+                "passed": true,
+                "reason": "Claimline Test Repair Centre inspection found liquid damage to main board and keyboard."
+              },
+              {
+                "condition": "A repair estimate supports the claimed amount of 0.35 GEN.",
+                "passed": true,
+                "reason": "Repair estimate totals exactly 0.35 GEN (0.25 parts + 0.10 labour)."
+              }
+            ],
+            "inconsistencies": [],
+            "contentDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "payoutWei": "250000000000000000",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 1,
+            "decisionRevision": 1,
+            "appeals": 0,
+            "decisionIsCurrent": true
+          },
+          {
+            "id": "c2",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "500000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/out-of-scope-report.txt",
+            "evidenceDigest": "sha256:e68452e83c1a1b8f899043314b702399301c50660c0ddca9a239cd98d5da8ccf",
+            "status": "FILED",
+            "outcome": "NONE",
+            "payoutBand": 0,
+            "confidenceBand": "NONE",
+            "reason": "",
+            "conditions": [],
+            "inconsistencies": [],
+            "contentDigest": "",
+            "payoutWei": "0",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 0,
+            "decisionRevision": 0,
+            "appeals": 0,
+            "decisionIsCurrent": false
+          }
+        ],
+        "policyVersion": "claimline-policy-v2",
+        "policyCount": 1,
+        "claimCount": 2
+      },
+      "afterState": {
+        "policies": [
+          {
+            "id": "p1",
+            "insurer": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+            "holder": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "coverage": "Steward review: liquid damage",
+            "wording": "This policy covers accidental liquid damage to equipment owned by the insured. A repair centre inspection and estimate must support the claim. Software subscriptions and voluntary cancellations are excluded.",
+            "conditions": [
+              "The incident occurred inside the covered period.",
+              "The document describes accidental liquid damage to insured equipment.",
+              "An authorised repair inspection confirms physical damage.",
+              "A repair estimate supports the claimed amount of 0.35 GEN."
+            ],
+            "limitWei": "1000000000000000000",
+            "deductibleWei": "100000000000000000",
+            "startsAt": "1790812800",
+            "endsAt": "1792077120",
+            "poolWei": "400000000000000000",
+            "paidWei": "250000000000000000",
+            "withdrawnWei": "350000000000000000",
+            "reservedWei": "400000000000000000",
+            "recoverableWei": "0",
+            "reportingEndsAt": "1792681920",
+            "claimCount": 2,
+            "status": "CLOSED",
+            "policyVersion": "claimline-policy-v2"
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "350000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/equipment-damage-report.txt",
+            "evidenceDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "status": "SETTLED",
+            "outcome": "APPROVED",
+            "payoutBand": 100,
+            "confidenceBand": "HIGH",
+            "reason": "All four conditions are satisfied by the verified document. The incident date falls inside the policy period, the cause is accidental liquid damage to owned equipment, the authorised repair centre confirms physical damage, and the estimate exactly matches the 0.35 GEN claim.",
+            "conditions": [
+              {
+                "condition": "The incident occurred inside the covered period.",
+                "passed": true,
+                "reason": "Claim incident date 1792022400 and document date 15 October 2026 both fall between 1790812800 and 1792077120."
+              },
+              {
+                "condition": "The document describes accidental liquid damage to insured equipment.",
+                "passed": true,
+                "reason": "Sealed water bottle leak during travel caused laptop failure; declaration states equipment is owned by the insured."
+              },
+              {
+                "condition": "An authorised repair inspection confirms physical damage.",
+                "passed": true,
+                "reason": "Claimline Test Repair Centre inspection found liquid damage to main board and keyboard."
+              },
+              {
+                "condition": "A repair estimate supports the claimed amount of 0.35 GEN.",
+                "passed": true,
+                "reason": "Repair estimate totals exactly 0.35 GEN (0.25 parts + 0.10 labour)."
+              }
+            ],
+            "inconsistencies": [],
+            "contentDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "payoutWei": "250000000000000000",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 1,
+            "decisionRevision": 1,
+            "appeals": 0,
+            "decisionIsCurrent": true
+          },
+          {
+            "id": "c2",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "500000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/out-of-scope-report.txt",
+            "evidenceDigest": "sha256:e68452e83c1a1b8f899043314b702399301c50660c0ddca9a239cd98d5da8ccf",
+            "status": "FILED",
+            "outcome": "NONE",
+            "payoutBand": 0,
+            "confidenceBand": "NONE",
+            "reason": "",
+            "conditions": [],
+            "inconsistencies": [],
+            "contentDigest": "",
+            "payoutWei": "0",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 0,
+            "decisionRevision": 0,
+            "appeals": 0,
+            "decisionIsCurrent": false
+          }
+        ],
+        "policyVersion": "claimline-policy-v2",
+        "policyCount": 1,
+        "claimCount": 2
+      },
+      "beforeBalances": {
+        "0xc85B35932Bb3b5bAfc5d3C7770Fc2e4f0Bc71fd3": "750000000000000000",
+        "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71": "9600000000000004999",
+        "0x3654661080bC75Fd1674d5D81728Af424ff41622": "1250000000000000000",
+        "0xd02D27c7B19c2C40eFaCA8a0a1Ede626d58620FA": "1000000000000000000"
+      },
+      "afterBalances": {
+        "0xc85B35932Bb3b5bAfc5d3C7770Fc2e4f0Bc71fd3": "400000000000000000",
+        "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71": "9950000000000004999",
+        "0x3654661080bC75Fd1674d5D81728Af424ff41622": "1250000000000000000",
+        "0xd02D27c7B19c2C40eFaCA8a0a1Ede626d58620FA": "1000000000000000000"
+      },
+      "recipient": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+      "recipientDeltaWei": "350000000000000000"
+    },
+    {
+      "label": "Repeated withdrawal cannot consume remaining collateral",
+      "method": "withdraw_unused",
+      "hash": "0xea7daa24ffd8199d074388d2ac5b417544f7871f89a182cdb1c2f1e40b83224a",
+      "status": "FINALIZED",
+      "execution": "ERROR",
+      "beforeState": {
+        "policies": [
+          {
+            "id": "p1",
+            "insurer": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+            "holder": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "coverage": "Steward review: liquid damage",
+            "wording": "This policy covers accidental liquid damage to equipment owned by the insured. A repair centre inspection and estimate must support the claim. Software subscriptions and voluntary cancellations are excluded.",
+            "conditions": [
+              "The incident occurred inside the covered period.",
+              "The document describes accidental liquid damage to insured equipment.",
+              "An authorised repair inspection confirms physical damage.",
+              "A repair estimate supports the claimed amount of 0.35 GEN."
+            ],
+            "limitWei": "1000000000000000000",
+            "deductibleWei": "100000000000000000",
+            "startsAt": "1790812800",
+            "endsAt": "1792077120",
+            "poolWei": "400000000000000000",
+            "paidWei": "250000000000000000",
+            "withdrawnWei": "350000000000000000",
+            "reservedWei": "400000000000000000",
+            "recoverableWei": "0",
+            "reportingEndsAt": "1792681920",
+            "claimCount": 2,
+            "status": "CLOSED",
+            "policyVersion": "claimline-policy-v2"
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "350000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/equipment-damage-report.txt",
+            "evidenceDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "status": "SETTLED",
+            "outcome": "APPROVED",
+            "payoutBand": 100,
+            "confidenceBand": "HIGH",
+            "reason": "All four conditions are satisfied by the verified document. The incident date falls inside the policy period, the cause is accidental liquid damage to owned equipment, the authorised repair centre confirms physical damage, and the estimate exactly matches the 0.35 GEN claim.",
+            "conditions": [
+              {
+                "condition": "The incident occurred inside the covered period.",
+                "passed": true,
+                "reason": "Claim incident date 1792022400 and document date 15 October 2026 both fall between 1790812800 and 1792077120."
+              },
+              {
+                "condition": "The document describes accidental liquid damage to insured equipment.",
+                "passed": true,
+                "reason": "Sealed water bottle leak during travel caused laptop failure; declaration states equipment is owned by the insured."
+              },
+              {
+                "condition": "An authorised repair inspection confirms physical damage.",
+                "passed": true,
+                "reason": "Claimline Test Repair Centre inspection found liquid damage to main board and keyboard."
+              },
+              {
+                "condition": "A repair estimate supports the claimed amount of 0.35 GEN.",
+                "passed": true,
+                "reason": "Repair estimate totals exactly 0.35 GEN (0.25 parts + 0.10 labour)."
+              }
+            ],
+            "inconsistencies": [],
+            "contentDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "payoutWei": "250000000000000000",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 1,
+            "decisionRevision": 1,
+            "appeals": 0,
+            "decisionIsCurrent": true
+          },
+          {
+            "id": "c2",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "500000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/out-of-scope-report.txt",
+            "evidenceDigest": "sha256:e68452e83c1a1b8f899043314b702399301c50660c0ddca9a239cd98d5da8ccf",
+            "status": "FILED",
+            "outcome": "NONE",
+            "payoutBand": 0,
+            "confidenceBand": "NONE",
+            "reason": "",
+            "conditions": [],
+            "inconsistencies": [],
+            "contentDigest": "",
+            "payoutWei": "0",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 0,
+            "decisionRevision": 0,
+            "appeals": 0,
+            "decisionIsCurrent": false
+          }
+        ],
+        "policyVersion": "claimline-policy-v2",
+        "policyCount": 1,
+        "claimCount": 2
+      },
+      "afterState": {
+        "policies": [
+          {
+            "id": "p1",
+            "insurer": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+            "holder": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "coverage": "Steward review: liquid damage",
+            "wording": "This policy covers accidental liquid damage to equipment owned by the insured. A repair centre inspection and estimate must support the claim. Software subscriptions and voluntary cancellations are excluded.",
+            "conditions": [
+              "The incident occurred inside the covered period.",
+              "The document describes accidental liquid damage to insured equipment.",
+              "An authorised repair inspection confirms physical damage.",
+              "A repair estimate supports the claimed amount of 0.35 GEN."
+            ],
+            "limitWei": "1000000000000000000",
+            "deductibleWei": "100000000000000000",
+            "startsAt": "1790812800",
+            "endsAt": "1792077120",
+            "poolWei": "400000000000000000",
+            "paidWei": "250000000000000000",
+            "withdrawnWei": "350000000000000000",
+            "reservedWei": "400000000000000000",
+            "recoverableWei": "0",
+            "reportingEndsAt": "1792681920",
+            "claimCount": 2,
+            "status": "CLOSED",
+            "policyVersion": "claimline-policy-v2"
+          }
+        ],
+        "claims": [
+          {
+            "id": "c1",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "350000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/equipment-damage-report.txt",
+            "evidenceDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "status": "SETTLED",
+            "outcome": "APPROVED",
+            "payoutBand": 100,
+            "confidenceBand": "HIGH",
+            "reason": "All four conditions are satisfied by the verified document. The incident date falls inside the policy period, the cause is accidental liquid damage to owned equipment, the authorised repair centre confirms physical damage, and the estimate exactly matches the 0.35 GEN claim.",
+            "conditions": [
+              {
+                "condition": "The incident occurred inside the covered period.",
+                "passed": true,
+                "reason": "Claim incident date 1792022400 and document date 15 October 2026 both fall between 1790812800 and 1792077120."
+              },
+              {
+                "condition": "The document describes accidental liquid damage to insured equipment.",
+                "passed": true,
+                "reason": "Sealed water bottle leak during travel caused laptop failure; declaration states equipment is owned by the insured."
+              },
+              {
+                "condition": "An authorised repair inspection confirms physical damage.",
+                "passed": true,
+                "reason": "Claimline Test Repair Centre inspection found liquid damage to main board and keyboard."
+              },
+              {
+                "condition": "A repair estimate supports the claimed amount of 0.35 GEN.",
+                "passed": true,
+                "reason": "Repair estimate totals exactly 0.35 GEN (0.25 parts + 0.10 labour)."
+              }
+            ],
+            "inconsistencies": [],
+            "contentDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+            "payoutWei": "250000000000000000",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 1,
+            "decisionRevision": 1,
+            "appeals": 0,
+            "decisionIsCurrent": true
+          },
+          {
+            "id": "c2",
+            "policyId": "p1",
+            "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+            "incidentAt": "1792022400",
+            "claimedWei": "500000000000000000",
+            "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/out-of-scope-report.txt",
+            "evidenceDigest": "sha256:e68452e83c1a1b8f899043314b702399301c50660c0ddca9a239cd98d5da8ccf",
+            "status": "FILED",
+            "outcome": "NONE",
+            "payoutBand": 0,
+            "confidenceBand": "NONE",
+            "reason": "",
+            "conditions": [],
+            "inconsistencies": [],
+            "contentDigest": "",
+            "payoutWei": "0",
+            "policyVersion": "claimline-policy-v2",
+            "evidenceRevision": 1,
+            "evaluatedRevision": 0,
+            "decisionRevision": 0,
+            "appeals": 0,
+            "decisionIsCurrent": false
+          }
+        ],
+        "policyVersion": "claimline-policy-v2",
+        "policyCount": 1,
+        "claimCount": 2
+      },
+      "beforeBalances": {
+        "0xc85B35932Bb3b5bAfc5d3C7770Fc2e4f0Bc71fd3": "400000000000000000",
+        "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71": "9950000000000004999",
+        "0x3654661080bC75Fd1674d5D81728Af424ff41622": "1250000000000000000",
+        "0xd02D27c7B19c2C40eFaCA8a0a1Ede626d58620FA": "1000000000000000000"
+      },
+      "afterBalances": {
+        "0xc85B35932Bb3b5bAfc5d3C7770Fc2e4f0Bc71fd3": "400000000000000000",
+        "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71": "9950000000000004999",
+        "0x3654661080bC75Fd1674d5D81728Af424ff41622": "1250000000000000000",
+        "0xd02D27c7B19c2C40eFaCA8a0a1Ede626d58620FA": "1000000000000000000"
+      },
+      "stateAndBalancesUnchanged": true
+    }
+  ],
+  "policyId": "p1",
+  "reportingDeadline": "1792681920",
+  "claimId": "c1",
+  "declinedId": "c2",
+  "result": "PASS",
+  "finalState": {
+    "policies": [
+      {
+        "id": "p1",
+        "insurer": "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71",
+        "holder": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+        "coverage": "Steward review: liquid damage",
+        "wording": "This policy covers accidental liquid damage to equipment owned by the insured. A repair centre inspection and estimate must support the claim. Software subscriptions and voluntary cancellations are excluded.",
+        "conditions": [
+          "The incident occurred inside the covered period.",
+          "The document describes accidental liquid damage to insured equipment.",
+          "An authorised repair inspection confirms physical damage.",
+          "A repair estimate supports the claimed amount of 0.35 GEN."
+        ],
+        "limitWei": "1000000000000000000",
+        "deductibleWei": "100000000000000000",
+        "startsAt": "1790812800",
+        "endsAt": "1792077120",
+        "poolWei": "400000000000000000",
+        "paidWei": "250000000000000000",
+        "withdrawnWei": "350000000000000000",
+        "reservedWei": "400000000000000000",
+        "recoverableWei": "0",
+        "reportingEndsAt": "1792681920",
+        "claimCount": 2,
+        "status": "CLOSED",
+        "policyVersion": "claimline-policy-v2"
+      }
+    ],
+    "claims": [
+      {
+        "id": "c1",
+        "policyId": "p1",
+        "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+        "incidentAt": "1792022400",
+        "claimedWei": "350000000000000000",
+        "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/equipment-damage-report.txt",
+        "evidenceDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+        "status": "SETTLED",
+        "outcome": "APPROVED",
+        "payoutBand": 100,
+        "confidenceBand": "HIGH",
+        "reason": "All four conditions are satisfied by the verified document. The incident date falls inside the policy period, the cause is accidental liquid damage to owned equipment, the authorised repair centre confirms physical damage, and the estimate exactly matches the 0.35 GEN claim.",
+        "conditions": [
+          {
+            "condition": "The incident occurred inside the covered period.",
+            "passed": true,
+            "reason": "Claim incident date 1792022400 and document date 15 October 2026 both fall between 1790812800 and 1792077120."
+          },
+          {
+            "condition": "The document describes accidental liquid damage to insured equipment.",
+            "passed": true,
+            "reason": "Sealed water bottle leak during travel caused laptop failure; declaration states equipment is owned by the insured."
+          },
+          {
+            "condition": "An authorised repair inspection confirms physical damage.",
+            "passed": true,
+            "reason": "Claimline Test Repair Centre inspection found liquid damage to main board and keyboard."
+          },
+          {
+            "condition": "A repair estimate supports the claimed amount of 0.35 GEN.",
+            "passed": true,
+            "reason": "Repair estimate totals exactly 0.35 GEN (0.25 parts + 0.10 labour)."
+          }
+        ],
+        "inconsistencies": [],
+        "contentDigest": "sha256:7f1a96bff1b1c554ecd9368fd531696c4e36ece3ef1b7a030585a1b07bc14186",
+        "payoutWei": "250000000000000000",
+        "policyVersion": "claimline-policy-v2",
+        "evidenceRevision": 1,
+        "evaluatedRevision": 1,
+        "decisionRevision": 1,
+        "appeals": 0,
+        "decisionIsCurrent": true
+      },
+      {
+        "id": "c2",
+        "policyId": "p1",
+        "claimant": "0x3654661080bC75Fd1674d5D81728Af424ff41622",
+        "incidentAt": "1792022400",
+        "claimedWei": "500000000000000000",
+        "evidenceUri": "https://raw.githubusercontent.com/Eminent18254/Claimline/d2832d2/demo/evidence/out-of-scope-report.txt",
+        "evidenceDigest": "sha256:e68452e83c1a1b8f899043314b702399301c50660c0ddca9a239cd98d5da8ccf",
+        "status": "FILED",
+        "outcome": "NONE",
+        "payoutBand": 0,
+        "confidenceBand": "NONE",
+        "reason": "",
+        "conditions": [],
+        "inconsistencies": [],
+        "contentDigest": "",
+        "payoutWei": "0",
+        "policyVersion": "claimline-policy-v2",
+        "evidenceRevision": 1,
+        "evaluatedRevision": 0,
+        "decisionRevision": 0,
+        "appeals": 0,
+        "decisionIsCurrent": false
+      }
+    ],
+    "policyVersion": "claimline-policy-v2",
+    "policyCount": 1,
+    "claimCount": 2
+  },
+  "finalBalances": {
+    "0xc85B35932Bb3b5bAfc5d3C7770Fc2e4f0Bc71fd3": "400000000000000000",
+    "0xCd7c77bF9748C1468dC8c1453dF9E70088aE2f71": "9950000000000004999",
+    "0x3654661080bC75Fd1674d5D81728Af424ff41622": "1250000000000000000",
+    "0xd02D27c7B19c2C40eFaCA8a0a1Ede626d58620FA": "1000000000000000000"
+  },
+  "completedAt": "2026-10-22T15:39:37.504Z"
+}

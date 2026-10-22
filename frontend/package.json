@@ -6,6 +6,7 @@
   "description": "Claimline - insurance claims adjudication on GenLayer",
   "scripts": {
     "dev": "vite",
+    "prebuild": "node ../scripts/check-deployment.mjs",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",

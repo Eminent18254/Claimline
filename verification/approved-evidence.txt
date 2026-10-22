@@ -1,0 +1,14 @@
+EQUIPMENT DAMAGE AND REPAIR REPORT
+
+Claim reference: CL-AUDIT-2026-001
+Insured: Claimline audit policyholder
+Equipment: Dell Latitude 7440 laptop
+Serial number: DL7440-AUDIT-001
+Incident date: 15 October 2026
+Location: Lagos, Nigeria
+Cause of damage: A sealed water bottle leaked inside the laptop bag during travel. The laptop stopped powering on.
+Inspection: An authorised repair centre found liquid damage to the main board and keyboard.
+Repair estimate: 0.35 GEN, made up of 0.25 GEN for parts and 0.10 GEN for labour.
+Repairer: Claimline Test Repair Centre
+Report date: 16 October 2026
+Declaration: The equipment is owned by the insured. The incident happened during the policy period. The repair estimate covers the full loss.

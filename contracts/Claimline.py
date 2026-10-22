@@ -32,6 +32,7 @@
 # @allow_storage, gl.vm.UserError and gl.vm.run_nondet_unsafe.
 
 from dataclasses import dataclass
+from datetime import datetime
 import hashlib
 import json
 
@@ -61,14 +62,31 @@ MAX_APPEALS = 1
 OUTCOMES = ("APPROVED", "PARTIALLY_APPROVED", "DECLINED", "MORE_EVIDENCE_REQUIRED")
 PAYOUT_BANDS = (0, 25, 50, 75, 100)
 CONFIDENCE_BANDS = ("HIGH", "MEDIUM", "LOW")
-# Conditions are matched by index and the model may disagree with the leader on
-# at most this many of them before the validators are not considered to agree.
-MAX_CONDITION_DISAGREEMENTS = 1
+# Claims may be reported for seven days after the covered period ends.
+REPORTING_WINDOW_SECONDS = 7 * 24 * 60 * 60
 
 SHA256_PREFIX = "sha256:"
 DIGEST_HEX_CHARS = 64
-POLICY_VERSION = "claimline-policy-v1"
+POLICY_VERSION = "claimline-policy-v2"
 ZERO_ADDRESS = "0x0000000000000000000000000000000000000000"
+
+
+def decisions_agree(leader: dict, independent: dict) -> bool:
+    """Exact agreement on every bounded finding; prose may differ."""
+    for field in ("outcome", "payoutBand", "confidenceBand", "contentDigest"):
+        if leader.get(field) != independent.get(field):
+            return False
+    left = leader.get("conditions") or []
+    right = independent.get("conditions") or []
+    if len(left) != len(right):
+        return False
+    return all(
+        a.get("condition") == b.get("condition")
+        and isinstance(a.get("passed"), bool)
+        and isinstance(b.get("passed"), bool)
+        and a["passed"] == b["passed"]
+        for a, b in zip(left, right)
+    )
 
 
 def is_sha256_digest(value: str) -> bool:
@@ -237,9 +255,20 @@ class Policy:
     ends_at: u256
     pool_wei: u256
     paid_wei: u256
+    withdrawn_wei: u256
     claim_count: u32
     status: str
     policy_version: str
+
+
+@gl.evm.contract_interface
+class NativeWallet:
+    """Empty-calldata native transfer; StudioNet routes EthSend to EOAs."""
+    class View:
+        pass
+
+    class Write:
+        pass
 
 
 @allow_storage
@@ -339,7 +368,32 @@ class Claimline(gl.Contract):
         payout = gross - int(policy.deductible_wei)
         return payout if payout > 0 else 0
 
+    def _now(self) -> int:
+        # This is the consensus transaction timestamp, never the caller's clock.
+        return int(datetime.fromisoformat(gl.message_raw["datetime"].replace("Z", "+00:00")).timestamp())
+
+    def _reserved_for(self, policy: Policy) -> int:
+        """Keep collateral for every unsettled decision and possible revision."""
+        reserved = 0
+        for cid in self.claim_order:
+            claim = self.claims[cid]
+            if str(claim.policy_id) != str(policy.id) or str(claim.status) == "SETTLED":
+                continue
+            status = str(claim.status)
+            if status in ("APPROVED", "PARTIALLY_APPROVED"):
+                reserved += self._payout_for(policy, claim)
+            elif status == "DECLINED" and (
+                int(claim.appeals) >= MAX_APPEALS
+                or int(claim.evidence_revision) >= MAX_EVIDENCE_REVISIONS
+            ):
+                continue
+            else:
+                # An unresolved claim can still receive the full band.
+                reserved += max(0, min(int(claim.claimed_wei), int(policy.limit_wei)) - int(policy.deductible_wei))
+        return reserved
+
     def _serialize_policy(self, policy: Policy) -> dict:
+        reserved = self._reserved_for(policy)
         return {
             "id": str(policy.id),
             "insurer": policy.insurer.as_hex,
@@ -353,6 +407,10 @@ class Claimline(gl.Contract):
             "endsAt": str(int(policy.ends_at)),
             "poolWei": str(int(policy.pool_wei)),
             "paidWei": str(int(policy.paid_wei)),
+            "withdrawnWei": str(int(policy.withdrawn_wei)),
+            "reservedWei": str(reserved),
+            "recoverableWei": str(max(0, int(policy.pool_wei) - reserved)) if str(policy.status) == "CLOSED" else "0",
+            "reportingEndsAt": str(int(policy.ends_at) + REPORTING_WINDOW_SECONDS),
             "claimCount": int(policy.claim_count),
             "status": str(policy.status),
             "policyVersion": str(policy.policy_version),
@@ -495,31 +553,7 @@ Report exactly {len(conditions)} entries in "conditions". List at least one inco
             except Exception:
                 return False
 
-            # Bounded fields must match exactly. Only the prose reasons are free.
-            if leader.get("outcome") != independent.get("outcome"):
-                return False
-            if leader.get("payoutBand") != independent.get("payoutBand"):
-                return False
-            if leader.get("confidenceBand") != independent.get("confidenceBand"):
-                return False
-
-            # Agreement has to cover the document as well as the verdict: two
-            # validators that downloaded different content have not agreed on
-            # anything, even if they happened to return the same outcome.
-            if leader.get("contentDigest") != independent.get("contentDigest"):
-                return False
-
-            leader_results = leader.get("conditions") or []
-            own_results = independent.get("conditions") or []
-            if len(leader_results) != len(own_results):
-                return False
-            disagreements = 0
-            for left, right in zip(leader_results, own_results):
-                if bool(left.get("passed")) != bool(right.get("passed")):
-                    disagreements += 1
-            if disagreements > MAX_CONDITION_DISAGREEMENTS:
-                return False
-            return True
+            return decisions_agree(leader, independent)
 
         result = gl.vm.run_nondet_unsafe(leader_fn, validator_fn)
         if not isinstance(result, dict):
@@ -603,6 +637,7 @@ Report exactly {len(conditions)} entries in "conditions". List at least one inco
             ends_at=u256(end),
             pool_wei=u256(sent),
             paid_wei=u256(0),
+            withdrawn_wei=u256(0),
             claim_count=u32(0),
             status="ACTIVE",
             policy_version=POLICY_VERSION,
@@ -617,8 +652,7 @@ Report exactly {len(conditions)} entries in "conditions". List at least one inco
         sent = int(gl.message.value)
         if sent <= 0:
             raise gl.vm.UserError("Send GEN to fund the pool")
-        if str(policy.status) != "ACTIVE":
-            raise gl.vm.UserError("This policy is closed")
+        # Existing claims may still need funding after reporting has closed.
         policy.pool_wei = u256(int(policy.pool_wei) + sent)
 
     @gl.public.write
@@ -638,6 +672,8 @@ Report exactly {len(conditions)} entries in "conditions". List at least one inco
             raise gl.vm.UserError("Only the recorded holder can file a claim on this policy")
         if int(policy.claim_count) >= MAX_CLAIMS_PER_POLICY:
             raise gl.vm.UserError("This policy has reached its claim limit")
+        if self._now() >= int(policy.ends_at) + REPORTING_WINDOW_SECONDS:
+            raise gl.vm.UserError("The policy reporting period has ended")
 
         try:
             incident = int(str(incident_at).strip())
@@ -775,7 +811,7 @@ Report exactly {len(conditions)} entries in "conditions". List at least one inco
             raise gl.vm.UserError(f"Document URL must be at most {MAX_URI_CHARS} characters")
         if not is_sha256_digest(evidence_digest):
             raise gl.vm.UserError("Document digest must be sha256: followed by 64 hex characters")
-        if evidence_uri == str(claim.evidence_uri) and evidence_digest == str(claim.evidence_digest):
+        if evidence_digest == str(claim.evidence_digest):
             raise gl.vm.UserError("That document revision is already on record; nothing would change")
 
         if status == "DECLINED":
@@ -812,11 +848,16 @@ Report exactly {len(conditions)} entries in "conditions". List at least one inco
             raise gl.vm.UserError(
                 f"The pool holds {int(policy.pool_wei)} wei, which does not cover {payout}"
             )
+        if payout > int(self.balance):
+            raise gl.vm.UserError("The contract balance does not cover this payout")
 
         policy.pool_wei = u256(int(policy.pool_wei) - payout)
         policy.paid_wei = u256(int(policy.paid_wei) + payout)
         claim.payout_wei = u256(payout)
         claim.status = "SETTLED"
+        # Post a native transfer, applied only when this transaction finalizes.
+        # The recipient is immutable; the caller cannot redirect the payout.
+        NativeWallet(claim.claimant).emit_transfer(value=u256(payout))
 
     @gl.public.write
     def close_policy(self, policy_id: str) -> None:
@@ -824,7 +865,34 @@ Report exactly {len(conditions)} entries in "conditions". List at least one inco
         policy = self._policy(policy_id)
         if policy.insurer != gl.message.sender_address:
             raise gl.vm.UserError("Only the insurer can close this policy")
+        if str(policy.status) == "CLOSED":
+            raise gl.vm.UserError("This policy is already closed")
+        if self._now() < int(policy.ends_at) + REPORTING_WINDOW_SECONDS:
+            raise gl.vm.UserError("The policy reporting period must end before closure")
         policy.status = "CLOSED"
+
+    @gl.public.write
+    def withdraw_unused(self, policy_id: str, amount_wei: str) -> None:
+        """Recover only closed-policy surplus, preserving all possible payouts."""
+        policy = self._policy(policy_id)
+        if policy.insurer != gl.message.sender_address:
+            raise gl.vm.UserError("Only the insurer can withdraw unused funds")
+        if str(policy.status) != "CLOSED":
+            raise gl.vm.UserError("Close the policy before withdrawing unused funds")
+        try:
+            amount = int(amount_wei)
+        except (TypeError, ValueError):
+            raise gl.vm.UserError("Withdrawal must be a whole number of wei")
+        if amount <= 0:
+            raise gl.vm.UserError("Withdrawal must be greater than zero")
+        available = max(0, int(policy.pool_wei) - self._reserved_for(policy))
+        if amount > available:
+            raise gl.vm.UserError("Withdrawal would consume reserved claim collateral")
+        if amount > int(self.balance):
+            raise gl.vm.UserError("The contract balance does not cover this withdrawal")
+        policy.pool_wei = u256(int(policy.pool_wei) - amount)
+        policy.withdrawn_wei = u256(int(policy.withdrawn_wei) + amount)
+        NativeWallet(policy.insurer).emit_transfer(value=u256(amount))
     # ------------------------------------------------------------------- views
 
     @gl.public.view

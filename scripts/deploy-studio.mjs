@@ -1,0 +1,25 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import { client, source, digest, save, finalized, evidenceDir, root } from './studio.mjs';
+import { syncDeployment } from './sync-deployment.mjs';
+
+console.log('Checking pinned-runtime schema');
+const schema = await client.getContractSchemaForCode(source.toString('utf8'));
+assert.ok(schema.methods.withdraw_unused);
+save('schema.json', schema);
+console.log('Deploying source SHA-256', digest(source));
+const hash = await client.deployContract({ code: source, args: [] });
+save('deployment-pending.json', { hash, sourceSha256: digest(source) });
+const receipt = await finalized(hash);
+save('deployment-receipt.json', receipt);
+assert.equal(receipt.consensus_data.leader_receipt[0].execution_result, 'SUCCESS');
+const address = receipt.data.contract_address;
+assert.match(address, /^0x[0-9a-fA-F]{40}$/);
+const deployed = await client.getContractCode(address);
+assert.equal(deployed, source.toString('utf8'), 'Deployed source must match the repository byte for byte');
+fs.writeFileSync(path.join(evidenceDir, 'deployed-source.py'), deployed);
+const proof = { network: 'Studionet', chainId: 61999, address, hash, status: receipt.statusName, sourceSha256: digest(source), deployedSourceSha256: digest(deployed), byteForByteMatch: true };
+save('deployment.json', proof);
+syncDeployment(proof);
+console.log(JSON.stringify(proof));

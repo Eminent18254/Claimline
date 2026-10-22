@@ -1,0 +1,222 @@
+{
+  "ctor": {
+    "params": [],
+    "kwparams": {}
+  },
+  "methods": {
+    "adjudicate": {
+      "params": [
+        [
+          "claim_id",
+          "string"
+        ]
+      ],
+      "kwparams": {},
+      "readonly": false,
+      "ret": "null",
+      "payable": false
+    },
+    "close_policy": {
+      "params": [
+        [
+          "policy_id",
+          "string"
+        ]
+      ],
+      "kwparams": {},
+      "readonly": false,
+      "ret": "null",
+      "payable": false
+    },
+    "create_policy": {
+      "params": [
+        [
+          "holder",
+          "string"
+        ],
+        [
+          "coverage",
+          "string"
+        ],
+        [
+          "wording",
+          "string"
+        ],
+        [
+          "conditions_json",
+          "string"
+        ],
+        [
+          "limit_wei",
+          "string"
+        ],
+        [
+          "deductible_wei",
+          "string"
+        ],
+        [
+          "starts_at",
+          "string"
+        ],
+        [
+          "ends_at",
+          "string"
+        ]
+      ],
+      "kwparams": {},
+      "readonly": false,
+      "ret": "string",
+      "payable": true
+    },
+    "file_claim": {
+      "params": [
+        [
+          "policy_id",
+          "string"
+        ],
+        [
+          "incident_at",
+          "string"
+        ],
+        [
+          "claimed_wei",
+          "string"
+        ],
+        [
+          "evidence_uri",
+          "string"
+        ],
+        [
+          "evidence_digest",
+          "string"
+        ]
+      ],
+      "kwparams": {},
+      "readonly": false,
+      "ret": "string",
+      "payable": false
+    },
+    "fund_policy": {
+      "params": [
+        [
+          "policy_id",
+          "string"
+        ]
+      ],
+      "kwparams": {},
+      "readonly": false,
+      "ret": "null",
+      "payable": true
+    },
+    "get_claim": {
+      "params": [
+        [
+          "claim_id",
+          "string"
+        ]
+      ],
+      "kwparams": {},
+      "readonly": true,
+      "ret": "string"
+    },
+    "get_claims": {
+      "params": [],
+      "kwparams": {},
+      "readonly": true,
+      "ret": "string"
+    },
+    "get_claims_by": {
+      "params": [
+        [
+          "holder",
+          "string"
+        ]
+      ],
+      "kwparams": {},
+      "readonly": true,
+      "ret": "string"
+    },
+    "get_claims_for_policy": {
+      "params": [
+        [
+          "policy_id",
+          "string"
+        ]
+      ],
+      "kwparams": {},
+      "readonly": true,
+      "ret": "string"
+    },
+    "get_policies": {
+      "params": [],
+      "kwparams": {},
+      "readonly": true,
+      "ret": "string"
+    },
+    "get_policy": {
+      "params": [
+        [
+          "policy_id",
+          "string"
+        ]
+      ],
+      "kwparams": {},
+      "readonly": true,
+      "ret": "string"
+    },
+    "get_state": {
+      "params": [],
+      "kwparams": {},
+      "readonly": true,
+      "ret": "string"
+    },
+    "replace_evidence": {
+      "params": [
+        [
+          "claim_id",
+          "string"
+        ],
+        [
+          "evidence_uri",
+          "string"
+        ],
+        [
+          "evidence_digest",
+          "string"
+        ]
+      ],
+      "kwparams": {},
+      "readonly": false,
+      "ret": "null",
+      "payable": false
+    },
+    "settle": {
+      "params": [
+        [
+          "claim_id",
+          "string"
+        ]
+      ],
+      "kwparams": {},
+      "readonly": false,
+      "ret": "null",
+      "payable": false
+    },
+    "withdraw_unused": {
+      "params": [
+        [
+          "policy_id",
+          "string"
+        ],
+        [
+          "amount_wei",
+          "string"
+        ]
+      ],
+      "kwparams": {},
+      "readonly": false,
+      "ret": "null",
+      "payable": false
+    }
+  }
+}

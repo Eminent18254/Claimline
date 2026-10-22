@@ -22,6 +22,10 @@ frontend/.vite/
 frontend/artifacts/ui/
 
 # local notes
+verification/runtime-investigation/
+verification/failure.png
+scripts/probe-runtime.mjs
+scripts/probe-eoa.mjs
 submission.md
 what-changed.md
 

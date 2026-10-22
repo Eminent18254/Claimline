@@ -19,6 +19,10 @@ export type Policy = {
   endsAt: string;
   poolWei: string;
   paidWei: string;
+  withdrawnWei: string;
+  reservedWei: string;
+  recoverableWei: string;
+  reportingEndsAt: string;
   claimCount: number;
   status: string;
   policyVersion: string;

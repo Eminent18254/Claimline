@@ -15,15 +15,15 @@ Claimline runs on **GenLayer Studionet (chain 61999)** with test funds only.
 
 ## Live audit
 
-A full contract and browser audit was completed on 20 October 2026: **38/38 checks passed across 18 transactions**, with build and UI tests green. See [AUDIT.md](AUDIT.md) for the transaction hashes and final state.
+The current deployment includes native claimant payouts, safe closed-policy recovery, exact agreement on every condition, and finalized frontend writes. **17 live checks and 16 contract tests pass**, with a 0.25 GEN claimant increase and a 0.35 GEN insurer recovery while preserving 0.40 GEN of claim reserves. See [verification/README.md](verification/README.md) for receipts and balance proof. The earlier accounting-only deployment is documented in [AUDIT.md](AUDIT.md).
 
 ## Deployed contract
 
 | | |
 |---|---|
-| **Contract address** | `0x8506A82203650A991FCDfDA3d6aee670cA5FdB62` |
-| **Explorer** | https://explorer-studio.genlayer.com/address/0x8506A82203650A991FCDfDA3d6aee670cA5FdB62 |
-| **Deploy transaction** | https://explorer-studio.genlayer.com/tx/0xf2d814e27513bdc24973e43adfc962a7b3a1a92e8350880bd9b3ea59047f231d |
+| **Contract address** | `0xc85B35932Bb3b5bAfc5d3C7770Fc2e4f0Bc71fd3` |
+| **Explorer** | https://explorer-studio.genlayer.com/address/0xc85B35932Bb3b5bAfc5d3C7770Fc2e4f0Bc71fd3 |
+| **Deploy transaction** | https://explorer-studio.genlayer.com/tx/0x89e6df076c148c02bce7d85fd630215e0a51853d4275504c3ed316a316a091e6 |
 | **Source** | `contracts/Claimline.py` |
 | **Runtime** | `py-genlayer:1jb45aa8ynh2a9c9xn3b7qqh8sm5q93hwfp7jqmwsfhh8jpz09h6` |
 | **Client SDK** | `genlayer-js` 1.x |
@@ -32,7 +32,7 @@ A full contract and browser audit was completed on 20 October 2026: **38/38 chec
 Read the live state yourself:
 
 ```bash
-genlayer call 0x8506A82203650A991FCDfDA3d6aee670cA5FdB62 get_state
+genlayer call 0xc85B35932Bb3b5bAfc5d3C7770Fc2e4f0Bc71fd3 get_state
 ```
 
 ## Why this needs GenLayer
@@ -59,7 +59,7 @@ Claimline puts the judgement inside the contract:
                      |
    APPROVED | PARTIALLY_APPROVED | DECLINED | MORE_EVIDENCE_REQUIRED
                      |
-        settle (insurer draws from the pool)
+        settle (GEN transfers to claimant on finalization)
                      |
                   SETTLED
 ```
@@ -78,7 +78,8 @@ A declined claim can be appealed **once**, and the appeal must carry a different
 | `adjudicate` | holder or insurer | Fetches and authenticates the document, then runs the committee. |
 | `replace_evidence` | holder | Commits a new revision. Used for a fresh review or a single appeal. |
 | `settle` | insurer | Pays an approved claim from the pool. |
-| `close_policy` | insurer | Stops new claims on a policy. |
+| `close_policy` | insurer | Closes reporting after the covered period and seven-day reporting window. Existing claims remain adjudicable and payable. |
+| `withdraw_unused` | insurer | Transfers closed-policy surplus to the insurer on finalization; unresolved claims and remaining appeals keep reserves. |
 
 ### Views
 
@@ -161,14 +162,28 @@ Set `CLAIMLINE_URL` for another local server URL or `CLAIMLINE_BROWSER` to use a
 ## Deploy the contract
 
 ```bash
-genlayer network set studionet
 npm run deploy:contract
 ```
+
+This script waits for FINALIZED, fetches the deployed code, verifies a byte-for-byte
+source match, and updates `frontend/src/config/deployment.json`, `.env`, and
+`.env.example` automatically. Existing local frontend environment files are also
+synced. The frontend reads the tracked manifest, so an old contract address in
+Vercel environment variables cannot override the verified deployment. Commit and
+push the updated manifest with the source; the next Vercel build uses that address
+without changing dashboard variables. Local `.env` files are not uploaded to Vercel.
+
+Use `npm run sync:deployment` to repeat synchronization from an already verified
+`verification/deployment.json`, without deploying another contract.
+
+Run `npm run test:contract` for the deterministic adverse-case suite. With Vite
+running, `npm run verify:studio` submits real StudioNet and browser transactions
+using test GEN and writes receipts and recipient balance snapshots to `verification/`.
 
 ## Limitations
 
 - **Testnet only.** Amounts are test GEN on Studionet.
-- **Payouts are recorded, not pushed.** The contract holds and accounts for the pool, but this chain does not let a contract push GEN to an end-user EOA. Settlement draws the payout down on chain; a production deployment would add a payout rail.
+- Existing claims with unresolved evidence or an unused appeal keep their maximum payout reserved. Closing a policy cannot cancel those rights; that collateral becomes recoverable only after the liability resolves.
 - Committee rounds take one to two minutes because they are real consensus rounds, not mocked calls.
 
 ## Repository layout
